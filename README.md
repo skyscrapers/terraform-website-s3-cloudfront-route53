@@ -164,3 +164,13 @@ root domain.
 * `cdn_hosted_zone_id`: the Hosted Zone ID of the CloudFront distribution. You usually pass the
   `website_cdn_zone_id` output variable from the main or redirect site here.
 * `route53_zone_id`: the Route53 Zone ID where the CNAME entry must be created.
+
+## Users
+
+If you are using the modules in this Git repository to set up your static site and you want some 
+visibility, add your site and info below and submit a pull request:
+
+* [Ringo De Smet's Blog](https://ringo.de-smet.name) (Ringo De Smet)
+* [ReleaseQueue](https://releasequeue.com) (Ringo De Smet)
+
+**Enjoy!**
