@@ -11,6 +11,11 @@ The scripts also take care of:
 * Access logging
 * Redirect HTTP to HTTPS
 
+These scripts suite my needs, but all evolution in the form of pull requests are welcome! To make
+this process fluent, create [an issue](https://github.com/ringods/terraform-website-s3-cloudfront-route53/issues)
+first describing what you want to contribute, then fork and create a branch with a clear name. 
+Submit your work as a pull request.
+
 ## Introduction
 
 This repository is split in 4 parts, each of which can be used as a separate module in your own root script.
