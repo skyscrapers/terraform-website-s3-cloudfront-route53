@@ -73,7 +73,7 @@ resource "aws_iam_policy" "site_deployer_policy" {
   policy = "${template_file.deployer_role_policy_file.rendered}"
 }
 
-resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" {
+resource "aws_iam_policy_attachment" "site-deployer-attach-user-policy" {
   provider = "aws.${var.region}"
   name = "site.${replace("${var.domain}",".","-")}-deployer-policy-attachment"
   users = ["${var.deployer}"]
