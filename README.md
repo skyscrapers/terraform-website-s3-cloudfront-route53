@@ -60,27 +60,107 @@ appropriate variables:
        source = "github.com/ringods/terraform-website-s3-cloudfront-route53//site-main"
        
        region = "eu-west-1"
+       domain = "my.domain.com"
+       duplicate-content-penalty-secret = "some-secret-password"
+       deployer = "an-iam-username"
+       acm-certificate-arn = "arn:aws:acm:us-east-1:<id>:certificate/<cert-id>"
     }
 
 Mention the double slash. This is to indicate to look into the subdirectory within the Github repository.
 See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/sources.html#github) for more info.
 
+### Inputs
+
+* `region`: the AWS region where the S3 bucket will be created. The source bucket can be created in any
+   of the available regions. The default value is `us-east-1`.
+* `domain`: the domain name by which you want to make the website available on the Internet. While we are not
+  at the point of setting up the DNS part, the CloudFront distribution needs to know for which domain it needs
+  to accept requests.
+* `duplicate-content-penalty-secret`: Value that will be used in a custom header for a CloudFront distribution
+  to gain access to the origin S3 bucket. If you make an S3 bucket available as the source for a CloudFront
+  distribution, you have the risk of search bots to index both this source bucket and the distribution.
+  Google _punishes_ you for this as you can read in 
+  [this article](https://support.google.com/webmasters/answer/66359?hl=en). We need to protect access to 
+  the source bucket. There are 2 options to prevent this: using an Origin Access User between CloudFront 
+  distribution and the source S3 bucket, or using custom headers between the distribution and the bucket.
+  The use of an Origin Access User prescribes accessing the source bucket in REST mode which results in
+  bucket redirects not being followed. As a result, this module will use the custom header option. 
+* `deployer`: the name of an existing IAM user that will be used to push contents to the S3 bucket. This
+  user will get a role policy attached to it, configured to have read/write access to the bucket that
+  will be created.
+* `acm-certificate-arn`: the id of an certificate in AWS Certificate Manager. As this certificate will be
+  used on a CloudFront distribution, Amazon's documentation states the certificate must be generated
+  in the `us-east-1` region.
+
+### Outputs
+
+* `website_cdn_hostname`: the Amazon generated Cloudfront domain name. You can already test accessing your
+  website content by this hostname. This hostname is needed later on to create a `CNAME` record in Route53.
+* `website_cdn_zone_id`: the Hosted Zone ID of the Cloudfront distribution. This zone ID is needed
+  later on to create a Route53 `ALIAS` record.
+
 ## Setting up the redirect site
+
+    module "site-redirect" {
+       source = "github.com/ringods/terraform-website-s3-cloudfront-route53//site-redirect"
+       
+       region = "eu-west-1"
+       domain = "my.domain.com"
+       duplicate-content-penalty-secret = "some-secret-password"
+       deployer = "an-iam-username"
+       acm-certificate-arn = "arn:aws:acm:us-east-1:<id>:certificate/<cert-id>"
+    }
+
+### Inputs
+
+### Outputs
+
+* `website_cdn_hostname`: the Amazon generated Cloudfront domain name. You can already test accessing your
+  website content by this hostname. This hostname is needed later on to create a `CNAME` record in Route53.
+* `website_cdn_zone_id`: the Hosted Zone ID of the Cloudfront distribution. This zone ID is needed
+  later on to create a Route53 `ALIAS` record.
 
 ## Setting up the Route 53 CNAME
 
 Whether it is a main site or a redirect site, a CNAME DNS record is needed for your site to be accessed on a 
 non-root domain.
 
-    module "site-main" {
+    module "dns-cname" {
        source = "github.com/ringods/terraform-website-s3-cloudfront-route53//r53-cname"
+
+       domain = "my.domain.com"
+       target = "${module.site-main.website_cdn_hostname}"
+       route53_zone_id = "<r53-zone-id>"
     }
+
+### Inputs
+
+* `domain`: the domain name you want to use to access your static website. This should match the domain
+  name used in setting up either a main or a redirect site.
+* `target`: the domain name of the CloudFront distribution to which the domain name should point. You
+  usually pass the `website_cdn_hostname` output variable from the main or redirect site here.
+* `route53_zone_id`: the Route53 Zone ID where the CNAME entry must be created.
 
 ## Setting up the Route 53 ALIAS
 
 Whether it is a main site or a redirect site, an ALIAS DNS record is needed for your site to be accessed on a 
 root domain.
 
-    module "site-main" {
+    module "dns-alias" {
        source = "github.com/ringods/terraform-website-s3-cloudfront-route53//r53-alias"
+
+       domain = "domain.com"
+       target = "${module.site-main.website_cdn_hostname}"
+       cdn_hosted_zone_id = "${module.site-main.website_cdn_zone_id}"
+       route53_zone_id = "<r53-zone-id>"
     }
+
+### Inputs
+
+* `domain`: the domain name you want to use to access your static website. This should match the domain
+  name used in setting up either a main or a redirect site.
+* `target`: the domain name of the CloudFront distribution to which the domain name should point. You
+  usually pass the `website_cdn_hostname` output variable from the main or redirect site here.
+* `cdn_hosted_zone_id`: the Hosted Zone ID of the CloudFront distribution. You usually pass the
+  `website_cdn_zone_id` output variable from the main or redirect site here.
+* `route53_zone_id`: the Route53 Zone ID where the CNAME entry must be created.

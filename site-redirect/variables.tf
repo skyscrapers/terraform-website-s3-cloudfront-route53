@@ -1,5 +1,7 @@
 // AWS Provider configuration
-variable region {}
+variable region {
+  default = "us-east-1"
+}
 
 // S3 Bucket configuration
 variable bucket_name {}
