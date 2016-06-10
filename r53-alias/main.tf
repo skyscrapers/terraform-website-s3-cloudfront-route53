@@ -1,7 +1,7 @@
 ################################################################################################################
 ## Create a Route53 ALIAS record to the Cloudfront website distribution
 ################################################################################################################
-resource "aws_route53_record" "website-cdn-cname" {
+resource "aws_route53_record" "cdn-alias" {
   zone_id = "${var.route53_zone_id}"
   name = "${var.domain}"
   type = "A"

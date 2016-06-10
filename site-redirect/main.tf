@@ -25,42 +25,34 @@ provider "aws" {
 }
 
 ################################################################################################################
-## Configure AWS Cloudfront Origin Access Identity to protect direct access to the backing S3 bucket
-################################################################################################################
-resource "aws_cloudfront_origin_access_identity" "website_bucket_origin_access" {
-  comment = "${var.bucket_name} Cloudfront Origin Access User"
-}
-
-################################################################################################################
 ## Configure the bucket and static website hosting
 ################################################################################################################
 resource "template_file" "bucket_policy" {
-  template = "${file("${path.module}/website_bucket_policy.json")}"
+  template = "${file("${path.module}/website_redirect_bucket_policy.json")}"
   vars {
-    bucket = "${var.bucket_name}"
+    bucket = "site.${replace("${var.domain}",".","-")}"
     secret = "${var.duplicate-content-penalty-secret}"
   }
 }
 
 resource "aws_s3_bucket" "website_bucket" {
   provider = "aws.${var.region}"
-  bucket = "${var.bucket_name}"
+  bucket = "site.${replace("${var.domain}",".","-")}"
   policy = "${template_file.bucket_policy.rendered}"
 
   website {
-    index_document = "index.html"
-    error_document = "404.html"
+    redirect_all_requests_to = "https://${var.target}"
   }
 
-  logging {
-    target_bucket = "${var.log_bucket}"
-    target_prefix = "${var.log_bucket_prefix}"
-  }
+//  logging {
+//    target_bucket = "${var.log_bucket}"
+//    target_prefix = "${var.log_bucket_prefix}"
+//  }
 
   tags {
 //    Name = "Staging Website for releasequeue.com"
 //    Generator = "http://gohugo.io"
-    Environment = "${var.environment}"
+//    Environment = "${var.environment}"
   }
 }
 
@@ -70,13 +62,13 @@ resource "aws_s3_bucket" "website_bucket" {
 resource "template_file" "deployer_role_policy_file" {
   template = "${file("${path.module}/deployer_role_policy.json")}"
   vars {
-    bucket = "${var.bucket_name}"
+    bucket = "site.${replace("${var.domain}",".","-")}"
   }
 }
 
 resource "aws_iam_policy" "site_deployer_policy" {
   provider = "aws.${var.region}"
-  name = "${var.bucket_name}.deployer"
+  name = "site.${replace("${var.domain}",".","-")}.deployer"
   path = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
   policy = "${template_file.deployer_role_policy_file.rendered}"
@@ -84,8 +76,8 @@ resource "aws_iam_policy" "site_deployer_policy" {
 
 resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" {
   provider = "aws.${var.region}"
-  name = "${var.bucket_name}-deployer-policy-attachment"
-  users = ["${var.iam-deployer}"]
+  name = "site.${replace("${var.domain}",".","-")}-deployer-policy-attachment"
+  users = ["${var.deployer}"]
   policy_arn = "${aws_iam_policy.site_deployer_policy.arn}"
 }
 
@@ -144,82 +136,4 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     minimum_protocol_version = "TLSv1"
   }
   aliases = ["${var.domain}"]
-}
-
-################################################################################################################
-## Creation of the domain aliases which should redirect to the main domain.
-################################################################################################################
-resource "template_file" "redirect_bucket_policy" {
-  template = "${file("${path.module}/website_redirect_bucket_policy.json")}"
-  vars {
-    bucket = "${var.bucket_name}-redirect"
-  }
-}
-
-resource "aws_s3_bucket" "website_bucket_redirect" {
-  provider = "aws.${var.region}"
-
-  count = "${signum(length(compact(split(",", var.domain_alias))))}"
-  bucket = "${var.bucket_name}-redirect"
-  policy = "${template_file.redirect_bucket_policy.rendered}"
-
-  website {
-    redirect_all_requests_to = "https://${var.domain}"
-  }
-
-  logging {
-    target_bucket = "${var.log_bucket}"
-    target_prefix = "${var.log_bucket_prefix}redirect/"
-  }
-
-  tags {
-    Environment = "${var.environment}"
-  }
-}
-
-################################################################################################################
-## Create a Cloudfront distribution for the redirection
-################################################################################################################
-resource "aws_cloudfront_distribution" "website_redirect_cdn" {
-  enabled = true
-  price_class = "PriceClass_200"
-  default_root_object = "index.html"
-  "origin" {
-    origin_id = "origin-bucket-${aws_s3_bucket.website_bucket_redirect.id}"
-    domain_name = "${aws_s3_bucket.website_bucket_redirect.website_endpoint}"
-    custom_origin_config {
-      http_port = "80"
-      https_port = "443"
-      origin_protocol_policy = "http-only"
-      origin_ssl_protocols = ["TLSv1"]
-    }
-  }
-  "default_cache_behavior" {
-    allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods = ["GET", "HEAD"]
-    "forwarded_values" {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
-    }
-    min_ttl = "0"
-    default_ttl = "300" //3600
-    max_ttl = "1200" //86400
-    target_origin_id = "origin-bucket-${aws_s3_bucket.website_bucket_redirect.id}"
-    // This redirects any HTTP request to HTTPS. Security first!
-    viewer_protocol_policy = "redirect-to-https"
-    compress = true
-  }
-  "restrictions" {
-    "geo_restriction" {
-      restriction_type = "none"
-    }
-  }
-  "viewer_certificate" {
-    acm_certificate_arn = "${var.acm-certificate-arn}"
-    ssl_support_method = "sni-only"
-    minimum_protocol_version = "TLSv1"
-  }
-  aliases = ["${var.domain_alias}"]
 }
