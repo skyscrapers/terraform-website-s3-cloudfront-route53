@@ -69,6 +69,7 @@ appropriate variables:
        duplicate-content-penalty-secret = "some-secret-password"
        deployer = "an-iam-username"
        acm-certificate-arn = "arn:aws:acm:us-east-1:<id>:certificate/<cert-id>"
+       not-found-response-path = "/404.html"
     }
 
 Mention the double slash. This is to indicate to look into the subdirectory within the Github repository.
@@ -96,6 +97,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `acm-certificate-arn`: the id of an certificate in AWS Certificate Manager. As this certificate will be
   used on a CloudFront distribution, Amazon's documentation states the certificate must be generated
   in the `us-east-1` region.
+* `not-found-response-path`: response path for the file that should be served on 404. Default to `/404.html`, but can be e.x. `/index.html` for single page applications.
 
 ### Outputs
 
