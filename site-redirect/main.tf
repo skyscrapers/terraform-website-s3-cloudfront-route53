@@ -87,6 +87,8 @@ resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" 
 resource "aws_cloudfront_distribution" "website_cdn" {
   enabled = true
   price_class = "PriceClass_200"
+  http_version = "http1.1"
+
   "origin" {
     origin_id = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
     domain_name = "${aws_s3_bucket.website_bucket.website_endpoint}"
