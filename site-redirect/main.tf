@@ -27,7 +27,7 @@ provider "aws" {
 ################################################################################################################
 ## Configure the bucket and static website hosting
 ################################################################################################################
-resource "template_file" "bucket_policy" {
+data "template_file" "bucket_policy" {
   template = "${file("${path.module}/website_redirect_bucket_policy.json")}"
   vars {
     bucket = "site.${replace("${var.domain}",".","-")}"
@@ -38,7 +38,7 @@ resource "template_file" "bucket_policy" {
 resource "aws_s3_bucket" "website_bucket" {
   provider = "aws.${var.region}"
   bucket = "site.${replace("${var.domain}",".","-")}"
-  policy = "${template_file.bucket_policy.rendered}"
+  policy = "${data.template_file.bucket_policy.rendered}"
 
   website {
     redirect_all_requests_to = "https://${var.target}"
