@@ -59,7 +59,7 @@ resource "aws_s3_bucket" "website_bucket" {
 ################################################################################################################
 ## Configure the credentials and access to the bucket for a deployment user
 ################################################################################################################
-resource "template_file" "deployer_role_policy_file" {
+data "template_file" "deployer_role_policy_file" {
   template = "${file("${path.module}/deployer_role_policy.json")}"
   vars {
     bucket = "site.${replace("${var.domain}",".","-")}"
@@ -71,7 +71,7 @@ resource "aws_iam_policy" "site_deployer_policy" {
   name = "site.${replace("${var.domain}",".","-")}.deployer"
   path = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
-  policy = "${template_file.deployer_role_policy_file.rendered}"
+  policy = "${data.template_file.deployer_role_policy_file.rendered}"
 }
 
 resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" {
