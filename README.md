@@ -63,9 +63,10 @@ appropriate variables:
 
     module "site-main" {
        source = "github.com/ringods/terraform-website-s3-cloudfront-route53//site-main"
-       
+
        region = "eu-west-1"
        domain = "my.domain.com"
+       bucket_name = "site_mydomain"
        duplicate-content-penalty-secret = "some-secret-password"
        deployer = "an-iam-username"
        acm-certificate-arn = "arn:aws:acm:us-east-1:<id>:certificate/<cert-id>"
@@ -82,6 +83,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `domain`: the domain name by which you want to make the website available on the Internet. While we are not
   at the point of setting up the DNS part, the CloudFront distribution needs to know for which domain it needs
   to accept requests.
+* `bucket_name`: the name of the bucket to create for the S3 based static website.
 * `duplicate-content-penalty-secret`: Value that will be used in a custom header for a CloudFront distribution
   to gain access to the origin S3 bucket. If you make an S3 bucket available as the source for a CloudFront
   distribution, you have the risk of search bots to index both this source bucket and the distribution.
@@ -105,6 +107,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   website content by this hostname. This hostname is needed later on to create a `CNAME` record in Route53.
 * `website_cdn_zone_id`: the Hosted Zone ID of the Cloudfront distribution. This zone ID is needed
   later on to create a Route53 `ALIAS` record.
+* `website_bucket`: the name of the generated Amazon S3 bucket.
 
 ## Setting up the redirect site
 

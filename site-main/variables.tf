@@ -3,6 +3,7 @@ variable region {
 }
 
 variable domain {}
+variable bucket_name {}
 variable duplicate-content-penalty-secret {}
 variable deployer {}
 variable acm-certificate-arn {}

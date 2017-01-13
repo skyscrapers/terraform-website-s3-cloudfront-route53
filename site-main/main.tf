@@ -30,14 +30,14 @@ provider "aws" {
 data "template_file" "bucket_policy" {
   template = "${file("${path.module}/website_bucket_policy.json")}"
   vars {
-    bucket = "site.${replace("${var.domain}",".","-")}"
+    bucket = "${var.bucket_name}"
     secret = "${var.duplicate-content-penalty-secret}"
   }
 }
 
 resource "aws_s3_bucket" "website_bucket" {
   provider = "aws.${var.region}"
-  bucket = "site.${replace("${var.domain}",".","-")}"
+  bucket = "${var.bucket_name}"
   policy = "${data.template_file.bucket_policy.rendered}"
 
   website {
@@ -62,7 +62,7 @@ resource "aws_s3_bucket" "website_bucket" {
 data "template_file" "deployer_role_policy_file" {
   template = "${file("${path.module}/deployer_role_policy.json")}"
   vars {
-    bucket = "site.${replace("${var.domain}",".","-")}"
+    bucket = "${var.bucket_name}"
   }
 }
 
