@@ -113,6 +113,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
        
        region = "eu-west-1"
        domain = "my.domain.com"
+       target = "${module.site-main.aws_s3_bucket.website_bucket}"
        duplicate-content-penalty-secret = "some-secret-password"
        deployer = "an-iam-username"
        acm-certificate-arn = "arn:aws:acm:us-east-1:<id>:certificate/<cert-id>"
