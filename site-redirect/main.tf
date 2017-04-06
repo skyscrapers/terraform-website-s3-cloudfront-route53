@@ -20,7 +20,7 @@
 ## Configure the AWS provider for the specific region
 ################################################################################################################
 provider "aws" {
-  alias = "${var.region}"
+  alias  = "${var.region}"
   region = "${var.region}"
 }
 
@@ -29,6 +29,7 @@ provider "aws" {
 ################################################################################################################
 data "template_file" "bucket_policy" {
   template = "${file("${path.module}/website_redirect_bucket_policy.json")}"
+
   vars {
     bucket = "site.${replace("${var.domain}",".","-")}"
     secret = "${var.duplicate-content-penalty-secret}"
@@ -37,22 +38,20 @@ data "template_file" "bucket_policy" {
 
 resource "aws_s3_bucket" "website_bucket" {
   provider = "aws.${var.region}"
-  bucket = "site.${replace("${var.domain}",".","-")}"
-  policy = "${data.template_file.bucket_policy.rendered}"
+  bucket   = "site.${replace("${var.domain}",".","-")}"
+  policy   = "${data.template_file.bucket_policy.rendered}"
 
   website {
     redirect_all_requests_to = "https://${var.target}"
   }
 
-//  logging {
-//    target_bucket = "${var.log_bucket}"
-//    target_prefix = "${var.log_bucket_prefix}"
-//  }
+  //  logging {
+  //    target_bucket = "${var.log_bucket}"
+  //    target_prefix = "${var.log_bucket_prefix}"
+  //  }
 
   tags {
-//    Name = "Staging Website for releasequeue.com"
-//    Generator = "http://gohugo.io"
-//    Environment = "${var.environment}"
+    //    Name = "Staging Website for releasequeue.com"  //    Generator = "http://gohugo.io"  //    Environment = "${var.environment}"
   }
 }
 
@@ -61,23 +60,24 @@ resource "aws_s3_bucket" "website_bucket" {
 ################################################################################################################
 data "template_file" "deployer_role_policy_file" {
   template = "${file("${path.module}/deployer_role_policy.json")}"
+
   vars {
     bucket = "site.${replace("${var.domain}",".","-")}"
   }
 }
 
 resource "aws_iam_policy" "site_deployer_policy" {
-  provider = "aws.${var.region}"
-  name = "site.${replace("${var.domain}",".","-")}.deployer"
-  path = "/"
+  provider    = "aws.${var.region}"
+  name        = "site.${replace("${var.domain}",".","-")}.deployer"
+  path        = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
-  policy = "${data.template_file.deployer_role_policy_file.rendered}"
+  policy      = "${data.template_file.deployer_role_policy_file.rendered}"
 }
 
 resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" {
-  provider = "aws.${var.region}"
-  name = "site.${replace("${var.domain}",".","-")}-deployer-policy-attachment"
-  users = ["${var.deployer}"]
+  provider   = "aws.${var.region}"
+  name       = "site.${replace("${var.domain}",".","-")}-deployer-policy-attachment"
+  users      = ["${var.deployer}"]
   policy_arn = "${aws_iam_policy.site_deployer_policy.arn}"
 }
 
@@ -85,57 +85,69 @@ resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" 
 ## Create a Cloudfront distribution for the static website
 ################################################################################################################
 resource "aws_cloudfront_distribution" "website_cdn" {
-  enabled = true
-  price_class = "PriceClass_200"
+  enabled      = true
+  price_class  = "PriceClass_200"
   http_version = "http1.1"
 
   "origin" {
-    origin_id = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
+    origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
     domain_name = "${aws_s3_bucket.website_bucket.website_endpoint}"
+
     custom_origin_config {
       origin_protocol_policy = "http-only"
-      http_port = "80"
-      https_port = "443"
-      origin_ssl_protocols = ["TLSv1"]
+      http_port              = "80"
+      https_port             = "443"
+      origin_ssl_protocols   = ["TLSv1"]
     }
+
     custom_header {
-      name = "User-Agent"
+      name  = "User-Agent"
       value = "${var.duplicate-content-penalty-secret}"
     }
   }
+
   default_root_object = "index.html"
+
   custom_error_response {
-    error_code = "404"
+    error_code            = "404"
     error_caching_min_ttl = "360"
-    response_code = "200"
-    response_page_path = "/404.html"
+    response_code         = "200"
+    response_page_path    = "/404.html"
   }
+
   "default_cache_behavior" {
     allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods = ["GET", "HEAD"]
+    cached_methods  = ["GET", "HEAD"]
+
     "forwarded_values" {
       query_string = false
+
       cookies {
         forward = "none"
       }
     }
-    min_ttl = "0"
-    default_ttl = "300" //3600
-    max_ttl = "1200" //86400
+
+    min_ttl          = "0"
+    default_ttl      = "300"                                              //3600
+    max_ttl          = "1200"                                             //86400
     target_origin_id = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
+
     // This redirects any HTTP request to HTTPS. Security first!
     viewer_protocol_policy = "redirect-to-https"
-    compress = true
+    compress               = true
   }
+
   "restrictions" {
     "geo_restriction" {
       restriction_type = "none"
     }
   }
+
   "viewer_certificate" {
-    acm_certificate_arn = "${var.acm-certificate-arn}"
-    ssl_support_method = "sni-only"
+    acm_certificate_arn      = "${var.acm-certificate-arn}"
+    ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1"
   }
+
   aliases = ["${var.domain}"]
 }
