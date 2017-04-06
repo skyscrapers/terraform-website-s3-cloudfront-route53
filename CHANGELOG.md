@@ -1,3 +1,10 @@
+## 2.0.1 (April 6, 2017)
+
+IMPROVEMENTS:
+
+ * Added `project` and `environment` variables to `site-main` and `site-redirect` modules
+ * Added a general `tags` variable to `site-main` and `site-redirect` modules
+
 ## 2.0.0 (October 16, 2016)
 
 IMPROVEMENTS:

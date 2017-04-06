@@ -97,7 +97,11 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `acm-certificate-arn`: the id of an certificate in AWS Certificate Manager. As this certificate will be
   used on a CloudFront distribution, Amazon's documentation states the certificate must be generated
   in the `us-east-1` region.
-* `not-found-response-path`: response path for the file that should be served on 404. Default to `/404.html`, but can be e.x. `/index.html` for single page applications.
+* `not-found-response-path`: response path for the file that should be served on 404. Default to `/404.html`,
+  but can be e.x. `/index.html` for single page applications.
+* `project`: (Optional) the name of a project this site belongs to. Default value = `noproject`
+* `environment`: (Optional) the environment this site belongs to. Default value = `default`
+* `tags`: (Optional) Additional key/value pairs to set as tags.
 
 ### Outputs
 
@@ -119,6 +123,11 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
     }
 
 ### Inputs
+
+* `project`: (Optional) the name of a project this site belongs to. Default value = `noproject`
+* `environment`: (Optional) the environment this site belongs to. Default value = `default`
+* `tags`: (Optional) Additional key/value pairs to set as tags.
+
 
 ### Outputs
 

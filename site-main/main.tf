@@ -52,9 +52,7 @@ resource "aws_s3_bucket" "website_bucket" {
   //    target_prefix = "${var.log_bucket_prefix}"
   //  }
 
-  tags {
-    Name = "Bucket for static site ${var.domain}"
-  }
+  tags = "${merge("${var.tags}",map("Name", "${var.project}-${var.environment}-${var.domain}", "Environment", "${var.environment}", "Project", "${var.project}"))}"
 }
 
 ################################################################################################################
@@ -152,4 +150,6 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   aliases = ["${var.domain}"]
+
+  tags = "${merge("${var.tags}",map("Name", "${var.project}-${var.environment}-${var.domain}", "Environment", "${var.environment}", "Project", "${var.project}"))}"
 }
