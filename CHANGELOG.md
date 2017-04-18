@@ -1,3 +1,9 @@
+## 2.0.3 (April 18, 2017)
+
+IMPROVEMENTS:
+
+ * Adding the main website bucket arn as an output.
+
 ## 2.0.2 (April 18, 2017)
 
 IMPROVEMENTS:
