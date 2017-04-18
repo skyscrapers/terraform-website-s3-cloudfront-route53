@@ -1,3 +1,9 @@
+## 2.0.2 (April 18, 2017)
+
+IMPROVEMENTS:
+
+ * Adding the main website bucket id as an output.
+
 ## 2.0.1 (April 6, 2017)
 
 IMPROVEMENTS:
