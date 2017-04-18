@@ -110,6 +110,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `website_cdn_zone_id`: the Hosted Zone ID of the Cloudfront distribution. This zone ID is needed
   later on to create a Route53 `ALIAS` record.
 * `website_bucket_id`: The website bucket id
+* `website_bucket_arn`: The website bucket arn
 
 ## Setting up the redirect site
 
