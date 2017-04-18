@@ -1,10 +1,10 @@
 # Terraform setup for S3 static site with CloudFront, Certificate Manager and Route53
 
-This Git repository contains the required [Terraform](https://www.terraform.io/) 
+This Git repository contains the required [Terraform](https://www.terraform.io/)
 scripts to setup a static website, hosted out of an S3 bucket.
 The site is fronted by a CloudFront distribution, uses AWS Certificate Manager for HTTPS and allows
 for configuring the required DNS entries in Route53.
- 
+
 The scripts also take care of:
 * Preventing the origin bucket being indexed by search bots.
 * Redirect other domains to the main site with proper rewriting.
@@ -13,7 +13,7 @@ The scripts also take care of:
 
 These scripts suite my needs, but all evolution in the form of pull requests are welcome! To make
 this process fluent, create [an issue](https://github.com/ringods/terraform-website-s3-cloudfront-route53/issues)
-first describing what you want to contribute, then fork and create a branch with a clear name. 
+first describing what you want to contribute, then fork and create a branch with a clear name.
 Submit your work as a pull request.
 
 ## Introduction
@@ -36,7 +36,7 @@ With the above 4 modules, you can pick yourself what you need for setups like:
 * main site on https://domain.com and redirecting the www version to the naked domain.
 
 Given the ease of setting up SSL secured sites with AWS Certificate Manager, the above modules do not offer
-the option to set up non-SSL sites. But since AWS Certificate Manager requires manual intervention to 
+the option to set up non-SSL sites. But since AWS Certificate Manager requires manual intervention to
 complete the certificate setup, you must create your certificates first before using the modules below.
 
 _Note:_ AWS Certificate Manager supports multiple regions. To use CloudFront with ACM certificates, the
@@ -52,7 +52,7 @@ is done implicitly by setting the following environment variables:
 * `AWS_DEFAULT_REGION`
 
 These variables are inherited by any Terraform modules and prevents passing too much TF variables
-from parent to module. This info was found 
+from parent to module. This info was found
 [here](https://groups.google.com/d/msg/terraform-tool/GM1QisZ95qc/Pt8JqPVePHAJ).
 
 ## Setting up the main site
@@ -63,7 +63,7 @@ appropriate variables:
 
     module "site-main" {
        source = "github.com/ringods/terraform-website-s3-cloudfront-route53//site-main"
-       
+
        region = "eu-west-1"
        domain = "my.domain.com"
        duplicate-content-penalty-secret = "some-secret-password"
@@ -85,12 +85,12 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `duplicate-content-penalty-secret`: Value that will be used in a custom header for a CloudFront distribution
   to gain access to the origin S3 bucket. If you make an S3 bucket available as the source for a CloudFront
   distribution, you have the risk of search bots to index both this source bucket and the distribution.
-  Google _punishes_ you for this as you can read in 
-  [this article](https://support.google.com/webmasters/answer/66359?hl=en). We need to protect access to 
-  the source bucket. There are 2 options to prevent this: using an Origin Access User between CloudFront 
+  Google _punishes_ you for this as you can read in
+  [this article](https://support.google.com/webmasters/answer/66359?hl=en). We need to protect access to
+  the source bucket. There are 2 options to prevent this: using an Origin Access User between CloudFront
   distribution and the source S3 bucket, or using custom headers between the distribution and the bucket.
   The use of an Origin Access User prescribes accessing the source bucket in REST mode which results in
-  bucket redirects not being followed. As a result, this module will use the custom header option. 
+  bucket redirects not being followed. As a result, this module will use the custom header option.
 * `deployer`: the name of an existing IAM user that will be used to push contents to the S3 bucket. This
   user will get a role policy attached to it, configured to have read/write access to the bucket that
   will be created.
@@ -109,12 +109,13 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   website content by this hostname. This hostname is needed later on to create a `CNAME` record in Route53.
 * `website_cdn_zone_id`: the Hosted Zone ID of the Cloudfront distribution. This zone ID is needed
   later on to create a Route53 `ALIAS` record.
+* `website_bucket_id`: The website bucket id
 
 ## Setting up the redirect site
 
     module "site-redirect" {
        source = "github.com/ringods/terraform-website-s3-cloudfront-route53//site-redirect"
-       
+
        region = "eu-west-1"
        domain = "my.domain.com"
        duplicate-content-penalty-secret = "some-secret-password"
@@ -138,7 +139,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 
 ## Setting up the Route 53 CNAME
 
-Whether it is a main site or a redirect site, a CNAME DNS record is needed for your site to be accessed on a 
+Whether it is a main site or a redirect site, a CNAME DNS record is needed for your site to be accessed on a
 non-root domain.
 
     module "dns-cname" {
@@ -159,7 +160,7 @@ non-root domain.
 
 ## Setting up the Route 53 ALIAS
 
-Whether it is a main site or a redirect site, an ALIAS DNS record is needed for your site to be accessed on a 
+Whether it is a main site or a redirect site, an ALIAS DNS record is needed for your site to be accessed on a
 root domain.
 
     module "dns-alias" {
@@ -183,7 +184,7 @@ root domain.
 
 ## Users
 
-If you are using the modules in this Git repository to set up your static site and you want some 
+If you are using the modules in this Git repository to set up your static site and you want some
 visibility, add your site and info below and submit a pull request:
 
 * [Ringo De Smet's Blog](https://ringo.de-smet.name) (Ringo De Smet)
