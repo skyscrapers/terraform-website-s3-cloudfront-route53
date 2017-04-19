@@ -31,14 +31,14 @@ data "template_file" "bucket_policy" {
   template = "${file("${path.module}/website_bucket_policy.json")}"
 
   vars {
-    bucket = "site.${replace("${var.domain}",".","-")}"
+    bucket = "${var.bucket_name}"
     secret = "${var.duplicate-content-penalty-secret}"
   }
 }
 
 resource "aws_s3_bucket" "website_bucket" {
   provider = "aws.${var.region}"
-  bucket   = "site.${replace("${var.domain}",".","-")}"
+  bucket   = "${var.bucket_name}"
   policy   = "${data.template_file.bucket_policy.rendered}"
 
   website {
@@ -62,13 +62,13 @@ data "template_file" "deployer_role_policy_file" {
   template = "${file("${path.module}/deployer_role_policy.json")}"
 
   vars {
-    bucket = "site.${replace("${var.domain}",".","-")}"
+    bucket = "${var.bucket_name}"
   }
 }
 
 resource "aws_iam_policy" "site_deployer_policy" {
   provider    = "aws.${var.region}"
-  name        = "site.${replace("${var.domain}",".","-")}.deployer"
+  name        = "${var.bucket_name}.deployer"
   path        = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
   policy      = "${data.template_file.deployer_role_policy_file.rendered}"
@@ -76,7 +76,7 @@ resource "aws_iam_policy" "site_deployer_policy" {
 
 resource "aws_iam_policy_attachment" "site-deployer-attach-user-policy" {
   provider   = "aws.${var.region}"
-  name       = "site.${replace("${var.domain}",".","-")}-deployer-policy-attachment"
+  name       = "${var.bucket_name}-deployer-policy-attachment"
   users      = ["${var.deployer}"]
   policy_arn = "${aws_iam_policy.site_deployer_policy.arn}"
 }

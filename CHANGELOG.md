@@ -1,3 +1,9 @@
+## 3.0.0 (April 19, 2017)
+
+IMPROVEMENTS:
+
+ * `bucket_name` is a required variable for module `site-main`. Bumped the major version as this is a breaking change.
+
 ## 2.0.3 (April 18, 2017)
 
 IMPROVEMENTS:
