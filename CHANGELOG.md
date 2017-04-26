@@ -1,3 +1,9 @@
+## 3.0.1 (April 26, 2017)
+
+IMPROVEMENTS:
+
+ * Support for `trusted_signers` on the CloudFront distribution of module `site-main`.
+
 ## 3.0.0 (April 19, 2017)
 
 IMPROVEMENTS:
