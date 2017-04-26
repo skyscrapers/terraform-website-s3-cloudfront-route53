@@ -127,6 +127,8 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       }
     }
 
+    trusted_signers = ["${var.trusted_signers}"]
+
     min_ttl          = "0"
     default_ttl      = "300"                                              //3600
     max_ttl          = "1200"                                             //86400

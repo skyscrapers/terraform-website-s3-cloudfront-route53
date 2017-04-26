@@ -101,6 +101,8 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   in the `us-east-1` region.
 * `not-found-response-path`: response path for the file that should be served on 404. Default to `/404.html`,
   but can be e.x. `/index.html` for single page applications.
+* `trusted_signers`: (Optional) List of AWS account IDs that are allowed to create signed URLs for this
+  distribution. May contain `self` to indicate the account where the distribution is created in.
 * `project`: (Optional) the name of a project this site belongs to. Default value = `noproject`
 * `environment`: (Optional) the environment this site belongs to. Default value = `default`
 * `tags`: (Optional) Additional key/value pairs to set as tags.

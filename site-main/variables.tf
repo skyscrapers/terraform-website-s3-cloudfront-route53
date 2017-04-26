@@ -32,3 +32,8 @@ variable "tags" {
   description = "Optional Tags"
   default     = {}
 }
+
+variable "trusted_signers" {
+  type = "list"
+  default = []
+}
