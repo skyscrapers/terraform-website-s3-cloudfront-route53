@@ -31,14 +31,14 @@ data "template_file" "bucket_policy" {
   template = "${file("${path.module}/website_redirect_bucket_policy.json")}"
 
   vars {
-    bucket = "site.${replace("${var.domain}",".","-")}"
+    bucket = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}"
     secret = "${var.duplicate-content-penalty-secret}"
   }
 }
 
 resource "aws_s3_bucket" "website_bucket" {
   provider = "aws.${var.region}"
-  bucket   = "site.${replace("${var.domain}",".","-")}"
+  bucket   = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}"
   policy   = "${data.template_file.bucket_policy.rendered}"
 
   website {
@@ -50,7 +50,7 @@ resource "aws_s3_bucket" "website_bucket" {
   //    target_prefix = "${var.log_bucket_prefix}"
   //  }
 
-  tags = "${merge("${var.tags}",map("Name", "${var.project}-${var.environment}-${var.domain}", "Environment", "${var.environment}", "Project", "${var.project}"))}"
+  tags = "${merge("${var.tags}",map("Name", "${var.project}-${var.environment}-${replace("${var.domain}","*","star")}", "Environment", "${var.environment}", "Project", "${var.project}"))}"
 }
 
 ################################################################################################################
@@ -60,13 +60,13 @@ data "template_file" "deployer_role_policy_file" {
   template = "${file("${path.module}/deployer_role_policy.json")}"
 
   vars {
-    bucket = "site.${replace("${var.domain}",".","-")}"
+    bucket = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}"
   }
 }
 
 resource "aws_iam_policy" "site_deployer_policy" {
   provider    = "aws.${var.region}"
-  name        = "site.${replace("${var.domain}",".","-")}.deployer"
+  name        = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}.deployer"
   path        = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
   policy      = "${data.template_file.deployer_role_policy_file.rendered}"
@@ -74,7 +74,7 @@ resource "aws_iam_policy" "site_deployer_policy" {
 
 resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" {
   provider   = "aws.${var.region}"
-  name       = "site.${replace("${var.domain}",".","-")}-deployer-policy-attachment"
+  name       = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}-deployer-policy-attachment"
   users      = ["${var.deployer}"]
   policy_arn = "${aws_iam_policy.site_deployer_policy.arn}"
 }
@@ -149,6 +149,6 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   aliases = ["${var.domain}"]
 
-  tags = "${merge("${var.tags}",map("Name", "${var.project}-${var.environment}-${var.domain}", "Environment", "${var.environment}", "Project", "${var.project}"))}"
+  tags = "${merge("${var.tags}",map("Name", "${var.project}-${var.environment}-${replace("${var.domain}","*","star")}", "Environment", "${var.environment}", "Project", "${var.project}"))}"
 
 }
