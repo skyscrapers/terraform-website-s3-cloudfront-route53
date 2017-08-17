@@ -37,3 +37,8 @@ variable "trusted_signers" {
   type = "list"
   default = []
 }
+
+variable "forward-query-string" {
+  description = "Forward the query string to the origin"
+  default     = false
+}
