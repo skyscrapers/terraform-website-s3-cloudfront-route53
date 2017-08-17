@@ -106,6 +106,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `project`: (Optional) the name of a project this site belongs to. Default value = `noproject`
 * `environment`: (Optional) the environment this site belongs to. Default value = `default`
 * `tags`: (Optional) Additional key/value pairs to set as tags.
+* `forward-query-string`:  (Optional) Forward the query string to the origin. Default value = `false`
 
 ### Outputs
 
