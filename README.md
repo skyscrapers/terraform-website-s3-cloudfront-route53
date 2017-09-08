@@ -116,6 +116,8 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   later on to create a Route53 `ALIAS` record.
 * `website_bucket_id`: The website bucket id
 * `website_bucket_arn`: The website bucket arn
+* `website_cdn_id`: The CDN ID of the Cloudfront distribution.
+* `website_cdn_arn`: The ARN of the CDN
 
 ## Setting up the redirect site
 
