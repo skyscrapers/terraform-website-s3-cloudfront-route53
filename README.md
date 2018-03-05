@@ -25,7 +25,7 @@ of the required setup to you, the user.
 * *site-main*: setup of the main S3 bucket with a CloudFront distribution
 * *site-redirect*: setup of the redirect S3 bucket with a CloudFront distribution
 * *r53-cname*: configuration of a Route53 CNAME record pointing to a CloudFront distribution
-* *r53-alias*: configuraiton of a Route53 ALIAS record pointing to a CloudFront distribution. Required
+* *r53-alias*: configuration of a Route53 ALIAS record pointing to a CloudFront distribution. Required
   for naked domain (APEX) setups.
 
 With the above 4 modules, you can pick yourself what you need for setups like:
