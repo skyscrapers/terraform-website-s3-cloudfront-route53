@@ -42,3 +42,8 @@ variable "forward-query-string" {
   description = "Forward the query string to the origin"
   default     = false
 }
+
+variable "price_class" {
+  description = "CloudFront price class"
+  default     = "PriceClass_200"
+}
