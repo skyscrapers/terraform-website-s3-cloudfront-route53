@@ -20,3 +20,8 @@ variable "tags" {
   description = "Optional Tags"
   default     = {}
 }
+
+variable "price_class" {
+  description = "CloudFront price class"
+  default     = "PriceClass_200"
+}

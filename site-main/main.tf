@@ -86,7 +86,7 @@ resource "aws_iam_policy_attachment" "site-deployer-attach-user-policy" {
 ################################################################################################################
 resource "aws_cloudfront_distribution" "website_cdn" {
   enabled      = true
-  price_class  = "PriceClass_200"
+  price_class  = "${var.price_class}"
   http_version = "http2"
 
   "origin" {
