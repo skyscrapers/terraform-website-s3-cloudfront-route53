@@ -104,7 +104,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     }
   }
 
-  default_root_object = "index.html"
+  default_root_object = "${var.default_root_object}"
 
   custom_error_response {
     error_code            = "404"
