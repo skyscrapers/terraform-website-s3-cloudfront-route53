@@ -140,6 +140,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `project`: (Optional) the name of a project this site belongs to. Default value = `noproject`
 * `environment`: (Optional) the environment this site belongs to. Default value = `default`
 * `tags`: (Optional) Additional key/value pairs to set as tags.
+* `default_root_object`: (Optional) The object that you want CloudFront to return (for example, index.html) when an end user requests the root URL. Default value = `index.html`
 * `price_class`: (Optional) The price class that corresponds with the maximum price that you want to pay for CloudFront service.
   Read [pricing page](https://aws.amazon.com/cloudfront/pricing/) for more details.
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
