@@ -5,7 +5,12 @@ variable region {
 variable project {
   default = "noproject"
 }
+
 variable environment {
+  default = "default"
+}
+
+variable profile {
   default = "default"
 }
 
@@ -34,7 +39,7 @@ variable "tags" {
 }
 
 variable "trusted_signers" {
-  type = "list"
+  type    = "list"
   default = []
 }
 
