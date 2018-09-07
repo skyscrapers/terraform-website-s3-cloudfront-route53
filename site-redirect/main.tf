@@ -17,14 +17,6 @@
 ################################################################################################################
 
 ################################################################################################################
-## Configure the AWS provider for the specific region
-################################################################################################################
-provider "aws" {
-  alias  = "${var.region}"
-  region = "${var.region}"
-}
-
-################################################################################################################
 ## Configure the bucket and static website hosting
 ################################################################################################################
 data "template_file" "bucket_policy" {
@@ -37,7 +29,6 @@ data "template_file" "bucket_policy" {
 }
 
 resource "aws_s3_bucket" "website_bucket" {
-  provider = "aws.${var.region}"
   bucket   = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}"
   policy   = "${data.template_file.bucket_policy.rendered}"
 
@@ -65,7 +56,6 @@ data "template_file" "deployer_role_policy_file" {
 }
 
 resource "aws_iam_policy" "site_deployer_policy" {
-  provider    = "aws.${var.region}"
   name        = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}.deployer"
   path        = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
@@ -73,7 +63,6 @@ resource "aws_iam_policy" "site_deployer_policy" {
 }
 
 resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" {
-  provider   = "aws.${var.region}"
   name       = "site.${replace("${replace("${var.domain}",".","-")}","*","star")}-deployer-policy-attachment"
   users      = ["${var.deployer}"]
   policy_arn = "${aws_iam_policy.site_deployer_policy.arn}"
