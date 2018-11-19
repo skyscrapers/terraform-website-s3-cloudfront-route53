@@ -19,9 +19,8 @@ variable "acm-certificate-arn" {
   type = string
 }
 
-variable "deployer" {
-  type    = string
-  default = null
+variable deployer {
+  default = ""
 }
 
 variable "routing_rules" {
