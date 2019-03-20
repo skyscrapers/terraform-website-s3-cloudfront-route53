@@ -99,6 +99,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `acm-certificate-arn`: the id of an certificate in AWS Certificate Manager. As this certificate will be
   used on a CloudFront distribution, Amazon's documentation states the certificate must be generated
   in the `us-east-1` region.
+* `default-root-object`: (Optional) default root object to be served by CloudFront. Defaults to `index.html`, but can be e.x. `v1.0.0/index.html` for versioned applications.
 * `not-found-response-path`: response path for the file that should be served on 404. Default to `/404.html`,
   but can be e.x. `/index.html` for single page applications.
 * `trusted_signers`: (Optional) List of AWS account IDs that are allowed to create signed URLs for this

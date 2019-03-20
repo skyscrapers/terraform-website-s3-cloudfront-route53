@@ -23,6 +23,10 @@ variable routing_rules {
   default = ""
 }
 
+variable default-root-object {
+  default = "index.html"
+}
+
 variable not-found-response-path {
   default = "/404.html"
 }
