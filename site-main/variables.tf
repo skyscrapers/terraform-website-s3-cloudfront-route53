@@ -14,6 +14,10 @@ variable domain {}
 variable bucket_name {
   description = "The name of the S3 bucket to create."
 }
+variable bucket_path {
+  description = "The folder in the S3 bucket to serve the website from."
+  default = "/"
+}
 
 variable duplicate-content-penalty-secret {}
 variable deployer {}

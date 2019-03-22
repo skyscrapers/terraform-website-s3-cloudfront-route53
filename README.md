@@ -84,6 +84,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   at the point of setting up the DNS part, the CloudFront distribution needs to know for which domain it needs
   to accept requests.
 * `bucket_name`: the name of the bucket to create for the S3 based static website.
+* `bucket_path`: the folder in the S3 bucket to serve the website from. Defaults to `/` which is a root of an S3 bucket.
 * `duplicate-content-penalty-secret`: Value that will be used in a custom header for a CloudFront distribution
   to gain access to the origin S3 bucket. If you make an S3 bucket available as the source for a CloudFront
   distribution, you have the risk of search bots to index both this source bucket and the distribution.
