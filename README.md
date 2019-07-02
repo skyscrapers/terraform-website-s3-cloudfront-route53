@@ -6,13 +6,14 @@ The site is fronted by a CloudFront distribution, uses AWS Certificate Manager f
 for configuring the required DNS entries in Route53.
 
 The scripts also take care of:
+
 * Preventing the origin bucket being indexed by search bots.
 * Redirect other domains to the main site with proper rewriting.
 * Access logging
 * Redirect HTTP to HTTPS
 
 These scripts suite my needs, but all evolution in the form of pull requests are welcome! To make
-this process fluent, create [an issue](https://github.com/ringods/terraform-website-s3-cloudfront-route53/issues)
+this process fluent, create [an issue](https://github.com/skyscrapers/terraform-website-s3-cloudfront-route53/issues)
 first describing what you want to contribute, then fork and create a branch with a clear name.
 Submit your work as a pull request.
 
@@ -30,10 +31,10 @@ of the required setup to you, the user.
 
 With the above 4 modules, you can pick yourself what you need for setups like:
 
-* single site on https://sub.domain.com
-* single site on https://domain.com
-* main site on https://www.domain.com and redirecting the naked domain to the www version.
-* main site on https://domain.com and redirecting the www version to the naked domain.
+* single site on [https://sub.domain.com](https://sub.domain.com)
+* single site on [https://domain.com](https://domain.com)
+* main site on [https://www.domain.com](https://www.domain.com) and redirecting the naked domain to the www version.
+* main site on [https://domain.com](https://domain.com) and redirecting the www version to the naked domain.
 
 Given the ease of setting up SSL secured sites with AWS Certificate Manager, the above modules do not offer
 the option to set up non-SSL sites. But since AWS Certificate Manager requires manual intervention to
@@ -62,7 +63,7 @@ the appropriate SSL certificates is as easy as using the `site-main` module and 
 appropriate variables:
 
     module "site-main" {
-       source = "github.com/ringods/terraform-website-s3-cloudfront-route53//site-main"
+       source = "github.com/skyscrapers/terraform-website-s3-cloudfront-route53//site-main"
 
        region = "eu-west-1"
        domain = "my.domain.com"
@@ -126,7 +127,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 ## Setting up the redirect site
 
     module "site-redirect" {
-       source = "github.com/ringods/terraform-website-s3-cloudfront-route53//site-redirect"
+       source = "github.com/skyscrapers/terraform-website-s3-cloudfront-route53//site-redirect"
 
        region = "eu-west-1"
        domain = "my.domain.com"
@@ -146,7 +147,6 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   Read [pricing page](https://aws.amazon.com/cloudfront/pricing/) for more details.
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
 
-
 ### Outputs
 
 * `website_cdn_hostname`: the Amazon generated Cloudfront domain name. You can already test accessing your
@@ -160,7 +160,7 @@ Whether it is a main site or a redirect site, a CNAME DNS record is needed for y
 non-root domain.
 
     module "dns-cname" {
-       source = "github.com/ringods/terraform-website-s3-cloudfront-route53//r53-cname"
+       source = "github.com/skyscrapers/terraform-website-s3-cloudfront-route53//r53-cname"
 
        domain = "my.domain.com"
        target = "${module.site-main.website_cdn_hostname}"
@@ -181,7 +181,7 @@ Whether it is a main site or a redirect site, an ALIAS DNS record is needed for 
 root domain.
 
     module "dns-alias" {
-       source = "github.com/ringods/terraform-website-s3-cloudfront-route53//r53-alias"
+       source = "github.com/skyscrapers/terraform-website-s3-cloudfront-route53//r53-alias"
 
        domain = "domain.com"
        target = "${module.site-main.website_cdn_hostname}"
@@ -206,5 +206,6 @@ visibility, add your site and info below and submit a pull request:
 
 * [Ringo De Smet's Blog](https://ringo.de-smet.name) (Ringo De Smet)
 * [ReleaseQueue](https://releasequeue.com) (Ringo De Smet)
+* [Skyscrapers](https://skyscrapers.eu) (Skyscrapers)
 
 **Enjoy!**
