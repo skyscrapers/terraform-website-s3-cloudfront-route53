@@ -204,8 +204,6 @@ root domain.
 If you are using the modules in this Git repository to set up your static site and you want some
 visibility, add your site and info below and submit a pull request:
 
-* [Ringo De Smet's Blog](https://ringo.de-smet.name) (Ringo De Smet)
-* [ReleaseQueue](https://releasequeue.com) (Ringo De Smet)
 * [Skyscrapers](https://skyscrapers.eu) (Skyscrapers)
 
 **Enjoy!**
