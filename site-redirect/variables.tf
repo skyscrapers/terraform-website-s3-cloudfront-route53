@@ -1,22 +1,32 @@
-variable region {
+variable "region" {
   default = "us-east-1"
 }
 
-variable project {
+variable "project" {
   default = "noproject"
 }
-variable environment {
+
+variable "environment" {
   default = "default"
 }
 
-variable domain {}
-variable target {}
-variable duplicate-content-penalty-secret {}
-variable deployer {}
-variable acm-certificate-arn {}
+variable "domain" {
+}
+
+variable "target" {
+}
+
+variable "duplicate-content-penalty-secret" {
+}
+
+variable "deployer" {
+}
+
+variable "acm-certificate-arn" {
+}
 
 variable "tags" {
-  type        = "map"
+  type        = map(string)
   description = "Optional Tags"
   default     = {}
 }
@@ -30,3 +40,4 @@ variable "default_root_object" {
   description = "CloudFront default root object"
   default     = "index.html"
 }
+
