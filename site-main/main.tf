@@ -94,7 +94,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       origin_protocol_policy = "http-only"
       http_port              = "80"
       https_port             = "443"
-      origin_ssl_protocols   = ["TLSv1"]
+      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
 
     custom_header {
@@ -176,7 +176,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
         origin_protocol_policy = origin.value.origin_path
         http_port              = "80"
         https_port             = "443"
-        origin_ssl_protocols   = ["TLSv1"]
+        origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       }
 
       custom_header {
