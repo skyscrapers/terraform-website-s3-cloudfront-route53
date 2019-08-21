@@ -173,7 +173,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       origin_path = origin.value.origin_path
 
       custom_origin_config {
-        origin_protocol_policy = origin.value.origin_path
+        origin_protocol_policy = origin.value.origin_protocol_policy
         http_port              = "80"
         https_port             = "443"
         origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
