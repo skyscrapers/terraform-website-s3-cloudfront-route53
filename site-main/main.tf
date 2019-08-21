@@ -94,7 +94,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       origin_protocol_policy = "http-only"
       http_port              = "80"
       https_port             = "443"
-      origin_ssl_protocols   = ["TLSv1"]
+      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
     }
 
     custom_header {
@@ -158,5 +158,70 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       Project     = var.project
     },
   )
+
+  dynamic "origin" {
+    for_each = [for o in var.origins : {
+      origin_id                        = o.origin_id
+      domain_name                      = o.domain_name
+      origin_path                      = o.origin_path
+      origin_protocol_policy           = o.origin_protocol_policy
+      duplicate_content_penalty_secret = o.duplicate_content_penalty_secret
+    }]
+    content {
+      origin_id   = origin.value.origin_id
+      domain_name = origin.value.domain_name
+      origin_path = origin.value.origin_path
+
+      custom_origin_config {
+        origin_protocol_policy = origin.value.origin_path
+        http_port              = "80"
+        https_port             = "443"
+        origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+      }
+
+      custom_header {
+        name  = "User-Agent"
+        value = origin.value.duplicate_content_penalty_secret
+      }
+    }
+  }
+
+  dynamic "ordered_cache_behavior" {
+    for_each = [for b in var.ordered_cache_behaviors : {
+      min_ttl          = b.min_ttl
+      default_ttl      = b.default_ttl
+      max_ttl          = b.max_ttl
+      path_pattern     = b.path_pattern
+      target_origin_id = b.target_origin_id
+      forward          = b.cookies_forward
+      event_type       = b.event_type
+      lambda_arn       = b.lambda_arn
+      include_body     = b.include_body
+    }]
+    content {
+      allowed_methods        = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
+      cached_methods         = ["GET", "HEAD"]
+
+      min_ttl     = ordered_cache_behavior.value.min_ttl
+      default_ttl = ordered_cache_behavior.value.default_ttl
+      max_ttl     = ordered_cache_behavior.value.max_ttl
+
+      path_pattern           = ordered_cache_behavior.value.path_pattern
+      target_origin_id       = ordered_cache_behavior.value.target_origin_id
+      viewer_protocol_policy = "redirect-to-https"
+
+      forwarded_values {
+        query_string = false
+        cookies {
+          forward = ordered_cache_behavior.value.forward
+        }
+      }
+      lambda_function_association {
+        event_type   = ordered_cache_behavior.value.event_type
+        lambda_arn   = ordered_cache_behavior.value.lambda_arn
+        include_body = ordered_cache_behavior.value.include_body
+      }
+    }
+  }
 }
 
