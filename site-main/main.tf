@@ -193,6 +193,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       max_ttl          = b.max_ttl
       path_pattern     = b.path_pattern
       target_origin_id = b.target_origin_id
+      headers          = b.forwarded_values_headers
       forward          = b.cookies_forward
       event_type       = b.event_type
       lambda_arn       = b.lambda_arn
@@ -212,6 +213,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
       forwarded_values {
         query_string = false
+        headers      = ordered_cache_behavior.value.headers
         cookies {
           forward = ordered_cache_behavior.value.forward
         }

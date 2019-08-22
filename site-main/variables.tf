@@ -80,14 +80,15 @@ variable "ordered_cache_behaviors" {
   description = "Additional routing behaviors"
   default     = []
   type = list(object({
-    min_ttl          = string
-    default_ttl      = string
-    max_ttl          = string
-    path_pattern     = string
-    target_origin_id = string
-    cookies_forward  = string
-    event_type       = string
-    lambda_arn       = string
-    include_body     = bool
+    min_ttl                  = string
+    default_ttl              = string
+    max_ttl                  = string
+    path_pattern             = string
+    target_origin_id         = string
+    forwarded_values_headers = list(string)
+    cookies_forward          = string
+    event_type               = string
+    lambda_arn               = string
+    include_body             = bool
   }))
 }
