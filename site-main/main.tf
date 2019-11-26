@@ -52,7 +52,7 @@ resource "aws_s3_bucket" "website_bucket" {
   //    target_prefix = "${var.log_bucket_prefix}"
   //  }
 
-  tags = locals.tags
+  tags = local.tags
 }
 
 ################################################################################################################
@@ -150,5 +150,5 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   aliases = [var.domain]
-  tags    = locals.tags
+  tags    = local.tags
 }
