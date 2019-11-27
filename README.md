@@ -105,8 +105,6 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   but can be e.x. `/index.html` for single page applications.
 * `trusted_signers`: (Optional) List of AWS account IDs that are allowed to create signed URLs for this
   distribution. May contain `self` to indicate the account where the distribution is created in.
-* `project`: (Optional) the name of a project this site belongs to. Default value = `noproject`
-* `environment`: (Optional) the environment this site belongs to. Default value = `default`
 * `tags`: (Optional) Additional key/value pairs to set as tags.
 * `forward-query-string`:  (Optional) Forward the query string to the origin. Default value = `false`
 * `price_class`: (Optional) The price class that corresponds with the maximum price that you want to pay for CloudFront service.
@@ -128,7 +126,6 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 
     module "site-redirect" {
        source = "github.com/skyscrapers/terraform-website-s3-cloudfront-route53//site-redirect"
-
        region = "eu-west-1"
        domain = "my.domain.com"
        target = "domain.com"
@@ -139,8 +136,6 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 
 ### Inputs
 
-* `project`: (Optional) the name of a project this site belongs to. Default value = `noproject`
-* `environment`: (Optional) the environment this site belongs to. Default value = `default`
 * `tags`: (Optional) Additional key/value pairs to set as tags.
 * `default_root_object`: (Optional) The object that you want CloudFront to return (for example, index.html) when an end user requests the root URL. Default value = `index.html`
 * `price_class`: (Optional) The price class that corresponds with the maximum price that you want to pay for CloudFront service.

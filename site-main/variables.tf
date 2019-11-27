@@ -2,15 +2,6 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "project" {
-  default = "noproject"
-}
-
-variable "environment" {
-  type    = string
-  default = "default"
-}
-
 variable "domain" {
   type = string
 }
