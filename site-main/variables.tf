@@ -60,3 +60,18 @@ variable "price_class" {
   description = "CloudFront price class"
   default     = "PriceClass_200"
 }
+
+variable "min_ttl" {
+  description = "CloudFront minumun TTl"
+  default = "0"
+}
+
+variable "default_ttl" {
+  description = "CloudFront default TTl"
+  default = "300"
+}
+
+variable "max_ttl" {
+  description = "CloudFront maximum TTl"
+  default = "1200"
+}
