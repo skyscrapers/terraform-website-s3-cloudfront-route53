@@ -35,6 +35,12 @@ variable "price_class" {
   default     = "PriceClass_200"
 }
 
+variable "ipv6" {
+  type        = bool
+  description = "Enable IPv6 on CloudFront distribution"
+  default     = false
+}
+
 variable "default_root_object" {
   type        = string
   description = "CloudFront default root object"

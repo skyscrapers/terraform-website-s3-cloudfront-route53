@@ -65,3 +65,9 @@ variable "price_class" {
   description = "CloudFront price class"
   default     = "PriceClass_200"
 }
+
+variable "ipv6" {
+  type        = bool
+  description = "Enable IPv6 on CloudFront distribution"
+  default     = false
+}

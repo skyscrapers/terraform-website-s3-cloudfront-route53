@@ -111,6 +111,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `price_class`: (Optional) The price class that corresponds with the maximum price that you want to pay for CloudFront service.
   Read [pricing page](https://aws.amazon.com/cloudfront/pricing/) for more details.
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
+* `ipv6`:  (Optional) Enable IPv6 support on CloudFront distribution. Default value = `false`
 
 ### Outputs
 
@@ -142,6 +143,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
 * `price_class`: (Optional) The price class that corresponds with the maximum price that you want to pay for CloudFront service.
   Read [pricing page](https://aws.amazon.com/cloudfront/pricing/) for more details.
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
+* `ipv6`:  (Optional) Enable IPv6 support on CloudFront distribution. Default value = `false`
 
 ### Outputs
 
