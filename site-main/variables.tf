@@ -38,6 +38,11 @@ variable "not-found-response-path" {
   default = "/404.html"
 }
 
+variable "not-found-response-code" {
+  type    = string
+  default = "200"
+}
+
 variable "tags" {
   type        = map(string)
   description = "Optional Tags"
