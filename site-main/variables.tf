@@ -38,6 +38,11 @@ variable "not-found-response-path" {
   default = "/404.html"
 }
 
+variable "not-found-response-code" {
+  type    = string
+  default = "200"
+}
+
 variable "tags" {
   type        = map(string)
   description = "Optional Tags"
@@ -59,4 +64,10 @@ variable "price_class" {
   type        = string
   description = "CloudFront price class"
   default     = "PriceClass_200"
+}
+
+variable "ipv6" {
+  type        = bool
+  description = "Enable IPv6 on CloudFront distribution"
+  default     = false
 }

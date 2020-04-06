@@ -83,9 +83,10 @@ resource "aws_iam_policy_attachment" "site-deployer-attach-user-policy" {
 ## Create a Cloudfront distribution for the static website
 ################################################################################################################
 resource "aws_cloudfront_distribution" "website_cdn" {
-  enabled      = true
-  price_class  = var.price_class
-  http_version = "http2"
+  enabled         = true
+  is_ipv6_enabled = var.ipv6
+  price_class     = var.price_class
+  http_version    = "http2"
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
@@ -109,7 +110,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   custom_error_response {
     error_code            = "404"
     error_caching_min_ttl = "360"
-    response_code         = "200"
+    response_code         = var.not-found-response-code
     response_page_path    = var.not-found-response-path
   }
 
