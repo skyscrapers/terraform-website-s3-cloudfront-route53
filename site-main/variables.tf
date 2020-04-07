@@ -38,11 +38,11 @@ variable "not-found-response-path" {
   default = "/404.html"
 }
 
-variable "tags" {
-  type        = map(string)
-  description = "Optional Tags"
-  default     = {}
-}
+#variable "tags" {
+#  type        = map(string)
+#  description = "Optional Tags"
+#  default     = {}
+#}
 
 variable "trusted_signers" {
   type    = list(string)
