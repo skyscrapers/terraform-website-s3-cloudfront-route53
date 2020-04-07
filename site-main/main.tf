@@ -16,14 +16,14 @@
 ##    certificates must be requested in region us-east-1
 ################################################################################################################
 
-locals {
-  tags = merge(
-    var.tags,
-    {
-      "domain" = var.domain
-    },
-  )
-}
+#locals {
+#  tags = merge(
+#    var.tags,
+#    {
+#      "domain" = var.domain
+#    },
+#  )
+#}
 
 ################################################################################################################
 ## Configure the bucket and static website hosting
@@ -52,7 +52,11 @@ resource "aws_s3_bucket" "website_bucket" {
   //    target_prefix = "${var.log_bucket_prefix}"
   //  }
 
-  tags = local.tags
+  tags = {
+    PROJECT     = var.PROJECT
+    Environment = var.ENVIRONMENT
+    Application = var.APPLICATION
+  }
 }
 
 ################################################################################################################
@@ -150,5 +154,9 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   aliases = [var.domain]
-  tags    = local.tags
+  tags = {
+    PROJECT     = var.PROJECT
+    Environment = var.ENVIRONMENT
+    Application = var.APPLICATION
+  }
 }
