@@ -133,9 +133,9 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       }
     }
 
-    min_ttl          = "0"
-    default_ttl      = "300"  //3600
-    max_ttl          = "1200" //86400
+    min_ttl          = var.cache_min_ttl
+    default_ttl      = var.cache_default_ttl
+    max_ttl          = var.cache_max_ttl
     target_origin_id = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
 
     // This redirects any HTTP request to HTTPS. Security first!

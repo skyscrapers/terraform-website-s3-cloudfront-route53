@@ -113,6 +113,9 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
 * `ipv6`:  (Optional) Enable IPv6 support on CloudFront distribution. Default value = `false`
 * `lambda_function_association`: (Optional) A list of [Lambda@Edge functions](https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#lambda_function_association) to run. Default value = `[]`
+* `cache_min_ttl`: (Optional) Minimum length of time (in seconds) to cache objects in CloudFront. Default value = `0`
+* `cache_max_ttl`: (Optional) Maximum length of time (in seconds) to cache objects in CloudFront. Default value = `1200`
+* `cache_default_ttl`: (Optional) Default length of time (in seconds) to cache objects in CloudFront. Default value = `300`
 
 ### Outputs
 
@@ -146,6 +149,9 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
 * `ipv6`:  (Optional) Enable IPv6 support on CloudFront distribution. Default value = `false`
 * `lambda_function_association`: (Optional) A list of [Lambda@Edge functions](https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#lambda_function_association) to run. Default value = `[]`
+* `cache_min_ttl`: (Optional) Minimum length of time (in seconds) to cache objects in CloudFront. Default value = `0`
+* `cache_max_ttl`: (Optional) Maximum length of time (in seconds) to cache objects in CloudFront. Default value = `1200`
+* `cache_default_ttl`: (Optional) Default length of time (in seconds) to cache objects in CloudFront. Default value = `300`
 
 ### Outputs
 
