@@ -144,7 +144,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
     // This redirects any HTTP request to HTTPS. Security first!
     viewer_protocol_policy = "redirect-to-https"
-    compress               = true
+    compress               = var.compress
   }
 
   restrictions {

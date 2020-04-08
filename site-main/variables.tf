@@ -72,6 +72,12 @@ variable "ipv6" {
   default     = false
 }
 
+variable "compress" {
+  type        = bool
+  description = "Compress content automatically"
+  default     = true
+}
+
 variable "lambda_function_association" {
   type = list(object({
     event_type   = string
