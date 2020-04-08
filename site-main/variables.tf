@@ -71,3 +71,13 @@ variable "ipv6" {
   description = "Enable IPv6 on CloudFront distribution"
   default     = false
 }
+
+variable "lambda_function_association" {
+    type = list(object({
+        event_type   = string
+        lambda_arn   = string
+        include_body = bool
+    }))
+    description = "Lambda@Edge functions to use"
+    default = []
+}

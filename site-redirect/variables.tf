@@ -46,3 +46,13 @@ variable "default_root_object" {
   description = "CloudFront default root object"
   default     = "index.html"
 }
+
+variable "lambda_function_association" {
+    type = list(object({
+        event_type   = string
+        lambda_arn   = string
+        include_body = bool
+    }))
+    description = "Lambda@Edge functions to use"
+    default = []
+}

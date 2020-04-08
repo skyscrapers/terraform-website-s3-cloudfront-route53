@@ -124,6 +124,15 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       }
     }
 
+    dynamic "lambda_function_association" {
+      for_each = var.lambda_function_association
+      content {
+        event_type   = lambda_function_association.value.event_type
+        lambda_arn   = lambda_function_association.value.lambda_arn
+        include_body = lambda_function_association.value.include_body
+      }
+    }
+
     min_ttl          = "0"
     default_ttl      = "300"  //3600
     max_ttl          = "1200" //86400
