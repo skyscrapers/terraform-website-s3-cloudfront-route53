@@ -78,6 +78,12 @@ variable "compress" {
   default     = true
 }
 
+variable "forward_headers" {
+  type        = list(string)
+  description = "Headers to forward to the origin"
+  default     = []
+}
+
 variable "lambda_function_association" {
   type = list(object({
     event_type   = string

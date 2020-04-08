@@ -120,6 +120,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
     forwarded_values {
       query_string = var.forward-query-string
+      headers = var.forward_headers
 
       cookies {
         forward = "none"
