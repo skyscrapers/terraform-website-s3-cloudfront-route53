@@ -16,6 +16,15 @@
 ##    certificates must be requested in region us-east-1
 ################################################################################################################
 
+locals {
+  tags = merge(
+    var.tags,
+    {
+      "domain" = replace(var.domain, "*", "star")
+    },
+  )
+}
+
 ################################################################################################################
 ## Configure the bucket and static website hosting
 ################################################################################################################
@@ -41,14 +50,7 @@ resource "aws_s3_bucket" "website_bucket" {
   //    target_prefix = "${var.log_bucket_prefix}"
   //  }
 
-  tags = merge(
-    var.tags,
-    {
-      Name        = "${var.project}-${var.environment}-${replace(var.domain, "*", "star")}"
-      Environment = var.environment
-      Project     = var.project
-    },
-  )
+  tags = local.tags
 }
 
 ################################################################################################################
@@ -79,9 +81,10 @@ resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" 
 ## Create a Cloudfront distribution for the static website
 ################################################################################################################
 resource "aws_cloudfront_distribution" "website_cdn" {
-  enabled      = true
-  price_class  = var.price_class
-  http_version = "http2"
+  enabled         = true
+  is_ipv6_enabled = var.ipv6
+  price_class     = var.price_class
+  http_version    = "http2"
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
@@ -145,13 +148,5 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   aliases = [var.domain]
 
-  tags = merge(
-    var.tags,
-    {
-      Name        = "${var.project}-${var.environment}-${replace(var.domain, "*", "star")}"
-      Environment = var.environment
-      Project     = var.project
-    },
-  )
+  tags = local.tags
 }
-

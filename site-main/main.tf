@@ -16,6 +16,15 @@
 ##    certificates must be requested in region us-east-1
 ################################################################################################################
 
+locals {
+  tags = merge(
+    var.tags,
+    {
+      "domain" = var.domain
+    },
+  )
+}
+
 ################################################################################################################
 ## Configure the bucket and static website hosting
 ################################################################################################################
@@ -43,14 +52,7 @@ resource "aws_s3_bucket" "website_bucket" {
   //    target_prefix = "${var.log_bucket_prefix}"
   //  }
 
-  tags = merge(
-    var.tags,
-    {
-      Name        = "${var.project}-${var.environment}-${var.domain}"
-      Environment = var.environment
-      Project     = var.project
-    },
-  )
+  tags = local.tags
 }
 
 ################################################################################################################
@@ -81,9 +83,10 @@ resource "aws_iam_policy_attachment" "site-deployer-attach-user-policy" {
 ## Create a Cloudfront distribution for the static website
 ################################################################################################################
 resource "aws_cloudfront_distribution" "website_cdn" {
-  enabled      = true
-  price_class  = var.price_class
-  http_version = "http2"
+  enabled         = true
+  is_ipv6_enabled = var.ipv6
+  price_class     = var.price_class
+  http_version    = "http2"
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
@@ -108,7 +111,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   custom_error_response {
     error_code            = "404"
     error_caching_min_ttl = "360"
-    response_code         = "200"
+    response_code         = var.not-found-response-code
     response_page_path    = var.not-found-response-path
   }
 
@@ -149,15 +152,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   aliases = [var.domain]
-
-  tags = merge(
-    var.tags,
-    {
-      Name        = "${var.project}-${var.environment}-${var.domain}"
-      Environment = var.environment
-      Project     = var.project
-    },
-  )
+  tags    = local.tags
 
   dynamic "origin" {
     for_each = [for o in var.origins : {
@@ -200,8 +195,8 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       include_body     = b.include_body
     }]
     content {
-      allowed_methods        = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
-      cached_methods         = ["GET", "HEAD"]
+      allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
+      cached_methods  = ["GET", "HEAD"]
 
       min_ttl     = ordered_cache_behavior.value.min_ttl
       default_ttl = ordered_cache_behavior.value.default_ttl
@@ -226,4 +221,3 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     }
   }
 }
-
