@@ -108,11 +108,14 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   default_root_object = var.default-root-object
 
-  custom_error_response {
-    error_code            = "404"
-    error_caching_min_ttl = "360"
-    response_code         = var.not-found-response-code
-    response_page_path    = var.not-found-response-path
+  dynamic "custom_error_response" {
+    for_each = var.not-found-response-enabled == true ? [1] : []
+    content {
+      error_code            = "404"
+      error_caching_min_ttl = "360"
+      response_code         = var.not-found-response-code
+      response_page_path    = var.not-found-response-path
+    }
   }
 
   default_cache_behavior {
