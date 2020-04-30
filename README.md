@@ -102,6 +102,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   used on a CloudFront distribution, Amazon's documentation states the certificate must be generated
   in the `us-east-1` region.
 * `default-root-object`: (Optional) default root object to be served by CloudFront. Defaults to `index.html`, but can be e.x. `v1.0.0/index.html` for versioned applications.
+* `not-found-response-enabled`: If specified as `true`, if the upstream returns 404 response code, it will override the response code with `not-found-response-code` and serve `not-found-response-path` file as a body. Defaults to `false`.
 * `not-found-response-path`: response path for the file that should be served on 404. Default to `/404.html`,
   but can be e.x. `/index.html` for single page applications.
 * `not-found-response-code`: response code when serving a 404 page. Defaults to `200`.

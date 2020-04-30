@@ -39,6 +39,11 @@ variable "default-root-object" {
   default = "index.html"
 }
 
+variable "not-found-response-enabled" {
+  type    = bool
+  default = false
+}
+
 variable "not-found-response-path" {
   type    = string
   default = "/404.html"
