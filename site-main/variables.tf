@@ -103,6 +103,7 @@ variable "ordered_cache_behaviors" {
     event_type               = string
     lambda_arn               = string
     include_body             = bool
+    forward_query_string     = bool
   }))
 }
 

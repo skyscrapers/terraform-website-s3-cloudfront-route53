@@ -186,16 +186,17 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   dynamic "ordered_cache_behavior" {
     for_each = [for b in var.ordered_cache_behaviors : {
-      min_ttl          = b.min_ttl
-      default_ttl      = b.default_ttl
-      max_ttl          = b.max_ttl
-      path_pattern     = b.path_pattern
-      target_origin_id = b.target_origin_id
-      headers          = b.forwarded_values_headers
-      forward          = b.cookies_forward
-      event_type       = b.event_type
-      lambda_arn       = b.lambda_arn
-      include_body     = b.include_body
+      min_ttl              = b.min_ttl
+      default_ttl          = b.default_ttl
+      max_ttl              = b.max_ttl
+      path_pattern         = b.path_pattern
+      target_origin_id     = b.target_origin_id
+      headers              = b.forwarded_values_headers
+      forward              = b.cookies_forward
+      event_type           = b.event_type
+      lambda_arn           = b.lambda_arn
+      include_body         = b.include_body
+      forward_query_string = b.forward_query_string
     }]
     content {
       allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -210,7 +211,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       viewer_protocol_policy = "redirect-to-https"
 
       forwarded_values {
-        query_string = false
+        query_string = ordered_cache_behavior.value.forward_query_string
         headers      = ordered_cache_behavior.value.headers
         cookies {
           forward = ordered_cache_behavior.value.forward
