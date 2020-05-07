@@ -77,6 +77,16 @@ variable "price_class" {
   default     = "PriceClass_200"
 }
 
+variable "default_cache_behavior_lambda_function_associations" {
+  description = "Optional Lambda@Edge function associations for the Default Cache Behavior (S3 bucket)"
+  default = []
+  type = list(object({
+    event_type = string
+    lambda_arn = string
+    include_body = bool
+  }))
+}
+
 variable "origins" {
   description = "Additional origins, supplementary to the default origin created from the S3 bucket"
   default     = []
