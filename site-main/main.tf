@@ -140,6 +140,19 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     // This redirects any HTTP request to HTTPS. Security first!
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
+
+    dynamic "lambda_function_association" {
+      for_each = [for lfa in var.default_cache_behavior_lambda_function_associations : {
+        event_type   = lfa.event_type
+        lambda_arn   = lfa.lambda_arn
+        include_body = lfa.include_body
+      }]
+      content {
+        event_type   = lambda_function_association.value.event_type
+        lambda_arn   = lambda_function_association.value.lambda_arn
+        include_body = lambda_function_association.value.include_body
+      }
+    }
   }
 
   restrictions {
