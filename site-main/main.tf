@@ -53,9 +53,9 @@ resource "aws_s3_bucket" "website_bucket" {
   //  }
 
   tags = {
-    PROJECT     = var.PROJECT
-    Environment = var.ENVIRONMENT
-    Application = var.APPLICATION
+    project     = var.project
+    environment = var.environment
+    application = var.application
   }
 }
 
@@ -155,8 +155,8 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   aliases = [var.domain]
   tags = {
-    PROJECT     = var.PROJECT
-    Environment = var.ENVIRONMENT
-    Application = var.APPLICATION
+    project     = var.project
+    environment = var.environment
+    application = var.application
   }
 }
