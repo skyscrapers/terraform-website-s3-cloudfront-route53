@@ -75,3 +75,15 @@ variable "max_ttl" {
   description = "CloudFront maximum TTl"
   default = "1200"
 }
+
+variable "application" {
+  type = string
+}
+
+variable "environment" {
+  type = string
+}
+
+variable "project" {
+  type = string
+}
