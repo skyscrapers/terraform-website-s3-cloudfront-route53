@@ -71,3 +71,9 @@ variable "ipv6" {
   description = "Enable IPv6 on CloudFront distribution"
   default     = false
 }
+
+variable "minimum_protocol_version" {
+  type        = string
+  description = "CloudFront viewer certificate minimum protocol version"
+  default     = "TLSv1"
+}
