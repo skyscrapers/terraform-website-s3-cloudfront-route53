@@ -47,7 +47,7 @@ variable "default_root_object" {
   default     = "index.html"
 }
 
-variable "minimum_protocol_version" {
+variable "minimum_client_tls_protocol_version" {
   type        = string
   description = "CloudFront viewer certificate minimum protocol version"
   default     = "TLSv1"

@@ -112,7 +112,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   Read [pricing page](https://aws.amazon.com/cloudfront/pricing/) for more details.
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
 * `ipv6`:  (Optional) Enable IPv6 support on CloudFront distribution. Default value = `false`
-* `minimum_protocol_version`: (Optional) Set the minimum protocol version of the CloudFront certificate.
+* `minimum_client_tls_protocol_version`: (Optional) Set the minimum protocol version of the CloudFront certificate.
   Read the docs on [Supported Protocols and Ciphers](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html#secure-connections-supported-ciphers)
   for supported values. Default value = `TLSv1`
 
@@ -147,7 +147,7 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   Read [pricing page](https://aws.amazon.com/cloudfront/pricing/) for more details.
   Options: `PriceClass_100` | `PriceClass_200` | `PriceClass_All`. Default value = `PriceClass_200`
 * `ipv6`:  (Optional) Enable IPv6 support on CloudFront distribution. Default value = `false`
-* `minimum_protocol_version`: (Optional) Set the minimum protocol version of the CloudFront certificate.
+* `minimum_client_tls_protocol_version`: (Optional) Set the minimum protocol version of the CloudFront certificate.
   Read the docs on [Supported Protocols and Ciphers](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html#secure-connections-supported-ciphers)
   for supported values. Default value = `TLSv1`
 
