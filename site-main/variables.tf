@@ -19,6 +19,10 @@ variable "deployer" {
   type = string
 }
 
+variable "allowed_origins" {
+  type = string
+}
+
 variable "acm-certificate-arn" {
   type = string
 }
