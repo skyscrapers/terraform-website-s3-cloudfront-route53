@@ -46,6 +46,13 @@ resource "aws_s3_bucket" "website_bucket" {
     error_document = "404.html"
     routing_rules  = var.routing_rules
   }
+  
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST", "DELETE", "GET"]
+    allowed_origins = [var.allowed_origins]
+    expose_headers  = ["ETag"]
+  }
 
   //  logging {
   //    target_bucket = "${var.log_bucket}"
