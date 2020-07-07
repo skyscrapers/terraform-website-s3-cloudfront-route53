@@ -230,10 +230,15 @@ resource "aws_cloudfront_distribution" "website_cdn" {
           forward = ordered_cache_behavior.value.forward
         }
       }
-      lambda_function_association {
-        event_type   = ordered_cache_behavior.value.event_type
-        lambda_arn   = ordered_cache_behavior.value.lambda_arn
-        include_body = ordered_cache_behavior.value.include_body
+      # Set lambda_arn to an empty string to skip lambda function association
+      dynamic "lambda_function_association" {
+        for_each = ordered_cache_behavior.value.lambda_arn != "" ? ["present"] : []
+
+        content {
+          event_type   = ordered_cache_behavior.value.event_type
+          lambda_arn   = ordered_cache_behavior.value.lambda_arn
+          include_body = ordered_cache_behavior.value.include_body
+        }
       }
     }
   }
