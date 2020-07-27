@@ -157,10 +157,10 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   viewer_certificate {
     acm_certificate_arn      = var.acm-certificate-arn
     ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.2_2018"
+    minimum_protocol_version = "TLSv1.2_2019"
   }
 
-  aliases = [var.domain]
+  aliases = var.domain
   tags = {
     project     = var.project
     environment = var.environment

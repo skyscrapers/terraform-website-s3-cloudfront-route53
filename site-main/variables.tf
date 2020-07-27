@@ -3,7 +3,7 @@ variable "region" {
 }
 
 variable "domain" {
-  type = string
+  type = list(string)
 }
 
 variable "bucket_name" {
