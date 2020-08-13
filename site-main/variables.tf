@@ -54,6 +54,11 @@ variable "not-found-response-code" {
   default = "200"
 }
 
+variable "wait-for-deployment" {
+  type    = bool
+  default = true
+}
+
 variable "tags" {
   type        = map(string)
   description = "Optional Tags"
