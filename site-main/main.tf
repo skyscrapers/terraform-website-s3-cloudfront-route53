@@ -88,6 +88,8 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   price_class     = var.price_class
   http_version    = "http2"
 
+  wait_for_deployment = var.wait-for-deployment
+
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
     domain_name = aws_s3_bucket.website_bucket.website_endpoint
