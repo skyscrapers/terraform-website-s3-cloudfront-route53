@@ -20,7 +20,7 @@ locals {
   tags = merge(
     var.tags,
     {
-      "domain" = var.domain
+      "domain" = replace(var.domain, "*", "--wildcard--")
     },
   )
 }
