@@ -19,10 +19,6 @@ variable "deployer" {
   type = string
 }
 
-variable "allowed_origins" {
-  type = string
-}
-
 variable "acm-certificate-arn" {
   type = string
 }
@@ -67,17 +63,17 @@ variable "price_class" {
 
 variable "min_ttl" {
   description = "CloudFront minumun TTl"
-  default = "0"
+  default     = "0"
 }
 
 variable "default_ttl" {
   description = "CloudFront default TTl"
-  default = "300"
+  default     = "300"
 }
 
 variable "max_ttl" {
   description = "CloudFront maximum TTl"
-  default = "1200"
+  default     = "1200"
 }
 
 variable "application" {
@@ -90,4 +86,16 @@ variable "environment" {
 
 variable "project" {
   type = string
+}
+
+variable "cors_rule_inputs" {
+  type = list(object({
+    allowed_headers = list(string)
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+    expose_headers  = list(string)
+  }))
+  default = null
+
+  description = "Specifies the allowed headers, methods, origins and exposed headers when using CORS on this bucket"
 }

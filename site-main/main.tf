@@ -28,12 +28,14 @@
 ################################################################################################################
 ## Configure the bucket and static website hosting
 ################################################################################################################
+
 data "template_file" "bucket_policy" {
   template = file("${path.module}/website_bucket_policy.json")
 
   vars = {
-    bucket = var.bucket_name
-    secret = var.duplicate-content-penalty-secret
+    bucket  = var.bucket_name
+    secret  = var.duplicate-content-penalty-secret
+    iam_arn = aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn
   }
 }
 
@@ -46,12 +48,16 @@ resource "aws_s3_bucket" "website_bucket" {
     error_document = "404.html"
     routing_rules  = var.routing_rules
   }
-  
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["PUT", "POST", "DELETE", "GET"]
-    allowed_origins = [var.allowed_origins]
-    expose_headers  = ["ETag"]
+
+  dynamic "cors_rule" {
+    for_each = var.cors_rule_inputs == null ? [] : var.cors_rule_inputs
+
+    content {
+      allowed_headers = cors_rule.value.allowed_headers
+      allowed_methods = cors_rule.value.allowed_methods
+      allowed_origins = cors_rule.value.allowed_origins
+      expose_headers  = cors_rule.value.expose_headers
+    }
   }
 
   //  logging {
@@ -101,6 +107,10 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
     domain_name = aws_s3_bucket.website_bucket.website_endpoint
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    }
 
     custom_origin_config {
       origin_protocol_policy = "http-only"
@@ -166,4 +176,12 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     environment = var.environment
     application = var.application
   }
+}
+
+################################################################################################################
+## Create Cloudfront OAI
+################################################################################################################
+
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  comment = "Create OAI to use in CF"
 }
