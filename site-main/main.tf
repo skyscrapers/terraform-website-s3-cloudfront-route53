@@ -29,15 +29,6 @@
 ## Configure the bucket and static website hosting
 ################################################################################################################
 
-locals {
-  cors_rule = var.enabled_cors ? null : {
-    allowed_headers = ["*"]
-    allowed_methods = ["PUT", "POST", "DELETE", "GET"]
-    allowed_origins = [var.allowed_origins]
-    expose_headers  = ["ETag"]
-  }
-}
-
 data "template_file" "bucket_policy" {
   template = file("${path.module}/website_bucket_policy.json")
 
@@ -58,7 +49,16 @@ resource "aws_s3_bucket" "website_bucket" {
     routing_rules  = var.routing_rules
   }
 
-  cors_rule = local.cors_rule
+  dynamic "cors_rule" {
+    for_each = var.cors_rule_inputs == null ? [] : var.cors_rule_inputs
+
+    content {
+      allowed_headers = cors_rule.value.allowed_headers
+      allowed_methods = cors_rule.value.allowed_methods
+      allowed_origins = cors_rule.value.allowed_origins
+      expose_headers  = cors_rule.value.expose_headers
+    }
+  }
 
   //  logging {
   //    target_bucket = "${var.log_bucket}"
@@ -105,9 +105,12 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   http_version = "http2"
 
   origin {
-    origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
-    origin_id              = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
-    domain_name            = aws_s3_bucket.website_bucket.website_endpoint
+    origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
+    domain_name = aws_s3_bucket.website_bucket.website_endpoint
+
+    s3_origin_config {
+      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    }
 
     custom_origin_config {
       origin_protocol_policy = "http-only"

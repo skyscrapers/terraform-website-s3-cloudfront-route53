@@ -19,10 +19,6 @@ variable "deployer" {
   type = string
 }
 
-variable "allowed_origins" {
-  type = string
-}
-
 variable "acm-certificate-arn" {
   type = string
 }
@@ -92,7 +88,14 @@ variable "project" {
   type = string
 }
 
-variable "enabled_cors" {
-  type    = bool
-  default = false
+variable "cors_rule_inputs" {
+  type = list(object({
+    allowed_headers = list(string)
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+    expose_headers  = list(string)
+  }))
+  default = null
+
+  description = "Specifies the allowed headers, methods, origins and exposed headers when using CORS on this bucket"
 }
