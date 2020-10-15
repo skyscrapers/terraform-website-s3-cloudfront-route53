@@ -1,3 +1,9 @@
+## 5.0.11 (October 15, 2020)
+
+IMPROVEMENTS:
+
+ * Add Origin Access Identity and conditional to Cors Rules in S3 bucket.
+
 ## 3.0.1 (April 26, 2017)
 
 IMPROVEMENTS:
