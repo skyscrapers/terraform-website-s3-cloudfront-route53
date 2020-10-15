@@ -67,17 +67,17 @@ variable "price_class" {
 
 variable "min_ttl" {
   description = "CloudFront minumun TTl"
-  default = "0"
+  default     = "0"
 }
 
 variable "default_ttl" {
   description = "CloudFront default TTl"
-  default = "300"
+  default     = "300"
 }
 
 variable "max_ttl" {
   description = "CloudFront maximum TTl"
-  default = "1200"
+  default     = "1200"
 }
 
 variable "application" {
@@ -90,4 +90,9 @@ variable "environment" {
 
 variable "project" {
   type = string
+}
+
+variable "enabled_cors" {
+  type    = bool
+  default = false
 }

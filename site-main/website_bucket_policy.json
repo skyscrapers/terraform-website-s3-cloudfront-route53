@@ -1,10 +1,11 @@
 {
   "Version": "2012-10-17",
+  "Id": "PolicyForCloudFrontPrivateContent",
   "Statement": [
     {
       "Sid": "PublicReadAccess",
       "Principal": {
-        "AWS": "*"
+        "AWS": "${iam_arn}"
       },
       "Effect": "Allow",
       "Action": [

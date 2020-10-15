@@ -28,12 +28,23 @@
 ################################################################################################################
 ## Configure the bucket and static website hosting
 ################################################################################################################
+
+locals {
+  cors_rule = var.enabled_cors ? null : {
+    allowed_headers = ["*"]
+    allowed_methods = ["PUT", "POST", "DELETE", "GET"]
+    allowed_origins = [var.allowed_origins]
+    expose_headers  = ["ETag"]
+  }
+}
+
 data "template_file" "bucket_policy" {
   template = file("${path.module}/website_bucket_policy.json")
 
   vars = {
-    bucket = var.bucket_name
-    secret = var.duplicate-content-penalty-secret
+    bucket  = var.bucket_name
+    secret  = var.duplicate-content-penalty-secret
+    iam_arn = aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn
   }
 }
 
@@ -46,13 +57,8 @@ resource "aws_s3_bucket" "website_bucket" {
     error_document = "404.html"
     routing_rules  = var.routing_rules
   }
-  
-  cors_rule {
-    allowed_headers = ["*"]
-    allowed_methods = ["PUT", "POST", "DELETE", "GET"]
-    allowed_origins = [var.allowed_origins]
-    expose_headers  = ["ETag"]
-  }
+
+  cors_rule = local.cors_rule
 
   //  logging {
   //    target_bucket = "${var.log_bucket}"
@@ -99,8 +105,9 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   http_version = "http2"
 
   origin {
-    origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
-    domain_name = aws_s3_bucket.website_bucket.website_endpoint
+    origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    origin_id              = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
+    domain_name            = aws_s3_bucket.website_bucket.website_endpoint
 
     custom_origin_config {
       origin_protocol_policy = "http-only"
@@ -166,4 +173,12 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     environment = var.environment
     application = var.application
   }
+}
+
+################################################################################################################
+## Create Cloudfront OAI
+################################################################################################################
+
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  comment = "Create OAI to use in CF"
 }
