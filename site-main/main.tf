@@ -106,7 +106,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
-    domain_name = aws_s3_bucket.website_bucket.website_endpoint
+    domain_name = "gb-assets-production.s3-website-us-east-1.amazonaws.com" #aws_s3_bucket.website_bucket.website_endpoint
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
