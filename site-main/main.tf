@@ -138,6 +138,11 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods  = ["GET", "HEAD"]
 
+    lambda_function_association {
+      event_type = "origin-response"
+      lambda_arn = "arn:aws:lambda:us-east-1:720414165514:function:apply_security_headers:4"
+    }
+
     forwarded_values {
       query_string = var.forward-query-string
 
