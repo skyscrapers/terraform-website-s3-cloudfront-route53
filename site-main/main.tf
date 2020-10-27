@@ -138,9 +138,12 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods  = ["GET", "HEAD"]
 
-    lambda_function_association {
-      event_type = "origin-response"
-      lambda_arn = "arn:aws:lambda:us-east-1:720414165514:function:apply_security_headers:4"
+    dynamic "lambda_function_association" {
+      for_each = var.enable_lambda_sec_headers == null ? [] : var.enable_lambda_sec_headers
+      content {
+        event_type = lambda_function_association.value.event_type
+        lambda_arn = lambda_function_association.value.lambda_arn
+      }
     }
 
     forwarded_values {

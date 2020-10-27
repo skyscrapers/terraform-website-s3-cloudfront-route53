@@ -99,3 +99,13 @@ variable "cors_rule_inputs" {
 
   description = "Specifies the allowed headers, methods, origins and exposed headers when using CORS on this bucket"
 }
+
+variable "enable_lambda_sec_headers" {
+  type = list(object({
+    event_type = string
+    lambda_arn = string
+  }))
+  default = null
+
+  description = "Specifies the lambda function of security headers"
+}
