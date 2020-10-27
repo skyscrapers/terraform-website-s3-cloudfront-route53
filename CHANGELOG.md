@@ -1,3 +1,9 @@
+## 5.0.18 (October 27, 2020)
+
+IMPROVEMENTS:
+
+ * Add conditional block to add Lambda funtion (Security headers).
+
 ## 5.0.11 (October 15, 2020)
 
 IMPROVEMENTS:
