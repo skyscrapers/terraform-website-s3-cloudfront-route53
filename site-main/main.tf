@@ -29,7 +29,8 @@
 ## Configure the bucket and static website hosting
 ################################################################################################################
 
-data "template_file" "bucket_policy" {
+data "template_file" "bucket_policy_oai" {
+  count    = "${var.enable_oai == true ? 1 : 0}"
   template = file("${path.module}/website_bucket_policy.json")
 
   vars = {
@@ -39,9 +40,31 @@ data "template_file" "bucket_policy" {
   }
 }
 
+data "template_file" "bucket_policy" {
+  template = file("${path.module}/website_bucket_policy.json")
+
+  vars = {
+    bucket = var.bucket_name
+    secret = var.duplicate-content-penalty-secret
+  }
+}
+
+locals {
+  origin_domain_name     = aws_s3_bucket.website_bucket.website_endpoint
+  origin_domain_name_oai = aws_s3_bucket.website_bucket.bucket_regional_domain_name
+  origin_access_identity = var.enable_oai == true ? [aws_cloudfront_origin_access_identity.origin_access_identity[0].cloudfront_access_identity_path] : []
+
+  custom_origin_config = var.enable_oai == false ? [{
+    origin_protocol_policy = "http-only"
+    http_port              = "80"
+    https_port             = "443"
+    origin_ssl_protocols   = ["TLSv1.2"]
+  }] : []
+}
+
 resource "aws_s3_bucket" "website_bucket" {
   bucket = var.bucket_name
-  policy = data.template_file.bucket_policy.rendered
+  policy = var.enable_oai == true ? data.template_file.bucket_policy_oai[0].rendered : data.template_file.bucket_policy.rendered
 
   website {
     index_document = "index.html"
@@ -106,18 +129,24 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.website_bucket.id}"
-    domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
+    domain_name = var.enable_oai == true ? local.origin_domain_name_oai : local.origin_domain_name
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
+    dynamic "s3_origin_config" {
+      for_each = local.origin_access_identity == null ? [] : local.origin_access_identity
+      content {
+        origin_access_identity = s3_origin_config.value
+      }
     }
 
-    # custom_origin_config {
-    #   origin_protocol_policy = "http-only"
-    #   http_port              = "80"
-    #   https_port             = "443"
-    #   origin_ssl_protocols   = ["TLSv1.2"]
-    # }
+    dynamic "custom_origin_config" {
+      for_each = local.custom_origin_config == null ? [] : local.custom_origin_config
+      content {
+        origin_protocol_policy = custom_origin_config.value.origin_protocol_policy
+        http_port              = custom_origin_config.value.http_port
+        https_port             = custom_origin_config.value.https_port
+        origin_ssl_protocols   = custom_origin_config.value.origin_ssl_protocols
+      }
+    }
 
     custom_header {
       name  = "User-Agent"
@@ -191,5 +220,6 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 ################################################################################################################
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  count   = var.enable_oai == true ? 1 : 0
   comment = "Create OAI to use in CF"
 }

@@ -109,3 +109,8 @@ variable "enable_lambda_sec_headers" {
 
   description = "Specifies the lambda function of security headers"
 }
+
+variable "enable_oai" {
+  description = "Enable/Disable OAI in CloudFront distribution"
+  default     = true
+}
