@@ -1,3 +1,9 @@
+## 5.0.19 (November 11, 2020)
+
+IMPROVEMENTS:
+
+ * Add conditional block to CORS in S3 bucket and Lambda@Edge/OAI in CloudFront.
+
 ## 5.0.18 (October 27, 2020)
 
 IMPROVEMENTS:
