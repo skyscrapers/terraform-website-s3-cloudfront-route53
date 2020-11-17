@@ -31,7 +31,7 @@
 
 data "template_file" "bucket_policy_oai" {
   count    = "${var.enable_oai == true ? 1 : 0}"
-  template = file("${path.module}/website_bucket_policy.json")
+  template = file("${path.module}/website_bucket_policy_oai.json")
 
   vars = {
     bucket  = var.bucket_name
