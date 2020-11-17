@@ -112,5 +112,5 @@ variable "enable_lambda_sec_headers" {
 
 variable "enable_oai" {
   description = "Enable/Disable OAI in CloudFront distribution"
-  default     = true
+  default     = false
 }
