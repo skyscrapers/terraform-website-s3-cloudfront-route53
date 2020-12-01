@@ -66,11 +66,16 @@ resource "aws_s3_bucket" "website_bucket" {
   bucket = var.bucket_name
   policy = var.enable_oai == true ? data.template_file.bucket_policy_oai[0].rendered : data.template_file.bucket_policy.rendered
 
+  versioning {
+    enabled = var.versioning
+  }
+
   website {
     index_document = "index.html"
     error_document = "404.html"
     routing_rules  = var.routing_rules
   }
+
 
   dynamic "cors_rule" {
     for_each = var.cors_rule_inputs == null ? [] : var.cors_rule_inputs
