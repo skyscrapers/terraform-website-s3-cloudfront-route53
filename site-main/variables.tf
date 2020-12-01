@@ -114,3 +114,9 @@ variable "enable_oai" {
   description = "Enable/Disable OAI in CloudFront distribution"
   default     = false
 }
+
+variable "versioning" {
+  description = "Enable/Disable Bucket versioning"
+  default     = false
+}
+
