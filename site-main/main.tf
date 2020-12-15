@@ -30,13 +30,13 @@
 ################################################################################################################
 
 data "template_file" "bucket_policy_oai" {
-  count    = "${var.enable_oai == true ? 1 : 0}"
+  count    = var.enable_oai == true ? 1 : 0
   template = file("${path.module}/website_bucket_policy_oai.json")
 
   vars = {
     bucket  = var.bucket_name
     secret  = var.duplicate-content-penalty-secret
-    iam_arn = aws_cloudfront_origin_access_identity.origin_access_identity[count.index]
+    iam_arn = aws_cloudfront_origin_access_identity.origin_access_identity.*.iam_arn
   }
 }
 
