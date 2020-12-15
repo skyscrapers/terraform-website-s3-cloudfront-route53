@@ -36,7 +36,7 @@ data "template_file" "bucket_policy_oai" {
   vars = {
     bucket  = var.bucket_name
     secret  = var.duplicate-content-penalty-secret
-    iam_arn = aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn
+    iam_arn = "${aws_cloudfront_origin_access_identity.origin_access_identity.*.iam_arn}"
   }
 }
 
