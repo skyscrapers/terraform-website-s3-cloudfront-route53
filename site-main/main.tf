@@ -88,12 +88,12 @@ resource "aws_s3_bucket" "website_bucket" {
     }
   }
 
-  //  logging {
-  //    target_bucket = "${var.log_bucket}"
-  //    target_prefix = "${var.log_bucket_prefix}"
-  //  }
-
   tags = var.tags
+}
+//  logging {
+//    target_bucket = "${var.log_bucket}"
+//    target_prefix = "${var.log_bucket_prefix}"
+//  }
 
 ################################################################################################################
 ## Configure the credentials and access to the bucket for a deployment user
@@ -208,7 +208,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   aliases = var.domain
-  
+
   tags = var.tags
 }
 
