@@ -38,11 +38,11 @@ variable "not-found-response-path" {
   default = "/404.html"
 }
 
-#variable "tags" {
-#  type        = map(string)
-#  description = "Optional Tags"
-#  default     = {}
-#}
+variable "tags" {
+  type        = map(string)
+  description = "Optional Tags"
+  default     = {}
+}
 
 variable "trusted_signers" {
   type    = list(string)
@@ -74,18 +74,6 @@ variable "default_ttl" {
 variable "max_ttl" {
   description = "CloudFront maximum TTl"
   default     = "1200"
-}
-
-variable "application" {
-  type = string
-}
-
-variable "environment" {
-  type = string
-}
-
-variable "project" {
-  type = string
 }
 
 variable "cors_rule_inputs" {
