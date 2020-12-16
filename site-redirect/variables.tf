@@ -15,12 +15,13 @@ variable "duplicate-content-penalty-secret" {
   type = string
 }
 
-variable "deployer" {
+variable "acm-certificate-arn" {
   type = string
 }
 
-variable "acm-certificate-arn" {
-  type = string
+variable "deployer" {
+  type    = string
+  default = ""
 }
 
 variable "tags" {
