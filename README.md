@@ -94,12 +94,12 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   distribution and the source S3 bucket, or using custom headers between the distribution and the bucket.
   The use of an Origin Access User prescribes accessing the source bucket in REST mode which results in
   bucket redirects not being followed. As a result, this module will use the custom header option.
-* `deployer`: the name of an existing IAM user that will be used to push contents to the S3 bucket. This
-  user will get a role policy attached to it, configured to have read/write access to the bucket that
-  will be created.
 * `acm-certificate-arn`: the id of an certificate in AWS Certificate Manager. As this certificate will be
   used on a CloudFront distribution, Amazon's documentation states the certificate must be generated
   in the `us-east-1` region.
+* `deployer`: (Optional) the name of an existing IAM user that will be used to push contents to the S3 bucket. This
+  user will get a role policy attached to it, configured to have read/write access to the bucket that
+  will be created.
 * `default-root-object`: (Optional) default root object to be served by CloudFront. Defaults to `index.html`, but can be e.x. `v1.0.0/index.html` for versioned applications.
 * `not-found-response-path`: response path for the file that should be served on 404. Default to `/404.html`,
   but can be e.x. `/index.html` for single page applications.

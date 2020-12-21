@@ -65,6 +65,8 @@ data "template_file" "deployer_role_policy_file" {
 }
 
 resource "aws_iam_policy" "site_deployer_policy" {
+  count       = var.deployer != null ? 1 : 0
+
   name        = "site.${replace(replace(var.domain, ".", "-"), "*", "star")}.deployer"
   path        = "/"
   description = "Policy allowing to publish a new version of the website to the S3 bucket"
@@ -72,6 +74,8 @@ resource "aws_iam_policy" "site_deployer_policy" {
 }
 
 resource "aws_iam_policy_attachment" "staging-site-deployer-attach-user-policy" {
+  count      = var.deployer != null ? 1 : 0
+
   name       = "site.${replace(replace(var.domain, ".", "-"), "*", "star")}-deployer-policy-attachment"
   users      = [var.deployer]
   policy_arn = aws_iam_policy.site_deployer_policy.arn
