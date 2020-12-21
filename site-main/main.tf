@@ -68,7 +68,7 @@ data "template_file" "deployer_role_policy_file" {
 }
 
 resource "aws_iam_policy" "site_deployer_policy" {
-  count       = var.deployer != "" ? 1 : 0
+  count       = var.deployer != null ? 1 : 0
 
   name        = "${var.bucket_name}.deployer"
   path        = "/"
@@ -77,7 +77,7 @@ resource "aws_iam_policy" "site_deployer_policy" {
 }
 
 resource "aws_iam_policy_attachment" "site-deployer-attach-user-policy" {
-  count      = var.deployer != "" ? 1 : 0
+  count      = var.deployer != null ? 1 : 0
 
   name       = "${var.bucket_name}-deployer-policy-attachment"
   users      = [var.deployer]
