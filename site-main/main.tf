@@ -181,8 +181,8 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       }
     }
 
-    cache_policy_id          = var.enable_cache_policy == true ? aws_cloudfront_cache_policy.main.id : null
-    origin_request_policy_id = var.enable_cache_policy == true ? aws_cloudfront_origin_request_policy.main.id : null
+    cache_policy_id          = var.enable_cache_policy == true ? aws_cloudfront_cache_policy.main[0].id : null
+    origin_request_policy_id = var.enable_cache_policy == true ? aws_cloudfront_origin_request_policy.main[0].id : null
 
     forwarded_values {
       query_string = var.forward-query-string
@@ -249,6 +249,9 @@ resource "aws_cloudfront_cache_policy" "main" {
         items = ["origin"]
       }
     }
+    cookies_config {
+      cookie_behavior = "none"
+    }
     query_strings_config {
       query_string_behavior = "all"
     }
@@ -270,5 +273,11 @@ resource "aws_cloudfront_origin_request_policy" "main" {
     headers {
       items = ["origin", "access-control-request-headers", "access-control-request-method"]
     }
+  }
+  cookies_config {
+    cookie_behavior = "none"
+  }
+  query_strings_config {
+    query_string_behavior = "none"
   }
 }
