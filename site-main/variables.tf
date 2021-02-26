@@ -108,3 +108,23 @@ variable "versioning" {
   default     = false
 }
 
+variable "enable_cache_policy" {
+  description = "Enable cache policy and origin request policy"
+  default     = true
+}
+
+variable "cache_policy_default_ttl" {
+  description = "Time in seconds, that you want objects to stay in the CloudFront cache"
+  default     = "86400"
+}
+
+variable "cache_policy_max_ttl" {
+  description = "The maximum amount of time, in seconds, that objects stay in the CloudFront cache before CloudFront sends another request to the origin to see if the object has been updated."
+  default     = "31536000"
+}
+
+variable "cache_policy_min_ttl" {
+  description = "The minimum amount of time, in seconds, that you want objects to stay in the CloudFront cache"
+  default     = "1"
+}
+

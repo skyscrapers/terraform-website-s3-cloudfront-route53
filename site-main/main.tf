@@ -181,6 +181,9 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       }
     }
 
+    cache_policy_id          = var.enable_cache_policy == true ? aws_cloudfront_cache_policy.main.id : null
+    origin_request_policy_id = var.enable_cache_policy == true ? aws_cloudfront_origin_request_policy.main.id : null
+
     forwarded_values {
       query_string = var.forward-query-string
 
@@ -225,4 +228,47 @@ resource "aws_cloudfront_distribution" "website_cdn" {
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
   count   = var.enable_oai == true ? 1 : 0
   comment = "Create OAI to use in CF"
+}
+
+################################################################################################################
+## Cache Policy
+################################################################################################################
+
+resource "aws_cloudfront_cache_policy" "main" {
+  count = var.enable_cache_policy == true ? 1 : 0
+
+  name        = "behavior-s3-cors-Cache"
+  default_ttl = var.cache_policy_default_ttl
+  max_ttl     = var.cache_policy_max_ttl
+  min_ttl     = var.cache_policy_min_ttl
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["origin"]
+      }
+    }
+    query_strings_config {
+      query_string_behavior = "all"
+    }
+  }
+}
+
+################################################################################################################
+## Origin Request Policy
+################################################################################################################
+
+resource "aws_cloudfront_origin_request_policy" "main" {
+  count = var.enable_cache_policy == true ? 1 : 0
+
+  name    = "behavior-managed-cors-s3-origin"
+  comment = "Policy for S3 origin with CORS"
+
+  headers_config {
+    header_behavior = "whitelist"
+    headers {
+      items = ["origin", "access-control-request-headers", "access-control-request-method"]
+    }
+  }
 }
