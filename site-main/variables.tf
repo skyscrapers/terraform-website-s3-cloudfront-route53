@@ -110,7 +110,7 @@ variable "versioning" {
 
 variable "enable_cache_policy" {
   description = "Enable cache policy and origin request policy"
-  default     = true
+  default     = false
 }
 
 variable "cache_policy_default_ttl" {
