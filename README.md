@@ -95,6 +95,8 @@ See the [Terraform Modules documentation](https://www.terraform.io/docs/modules/
   distribution and the source S3 bucket, or using custom headers between the distribution and the bucket.
   The use of an Origin Access User prescribes accessing the source bucket in REST mode which results in
   bucket redirects not being followed. As a result, this module will use the custom header option.
+
+  If this parameter is the empty string, a custom User-Agent header will not be added.
 * `deployer`: the name of an existing IAM user that will be used to push contents to the S3 bucket. This
   user will get a role policy attached to it, configured to have read/write access to the bucket that
   will be created.

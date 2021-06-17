@@ -192,9 +192,13 @@ resource "aws_cloudfront_distribution" "website_cdn" {
         origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       }
 
-      custom_header {
-        name  = "User-Agent"
-        value = origin.value.duplicate_content_penalty_secret
+      dynamic "custom_header" {
+        for_each = origin.value.duplicate_content_penalty_secret != "" ? ["present"] : []
+
+        content {
+          name  = "User-Agent"
+          value = origin.value.duplicate_content_penalty_secret
+        }
       }
     }
   }
