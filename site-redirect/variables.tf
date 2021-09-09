@@ -53,3 +53,9 @@ variable "minimum_client_tls_protocol_version" {
   description = "CloudFront viewer certificate minimum protocol version"
   default     = "TLSv1"
 }
+
+variable "aliases" {
+  type    = list(string)
+  description = "A list of alternate cnames"
+  default = []
+}
