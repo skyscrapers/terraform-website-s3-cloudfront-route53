@@ -17,6 +17,11 @@ variable "bucket_path" {
   default     = "/"
 }
 
+variable "ci_role_arn" {
+  type        = string
+  description = "An ARN of the CI role which has permissions to upload artifacts to this bucket"
+}
+
 variable "duplicate-content-penalty-secret" {
   type = string
 }

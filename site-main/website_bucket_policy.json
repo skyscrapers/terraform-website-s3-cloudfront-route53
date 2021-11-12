@@ -16,6 +16,14 @@
           "aws:UserAgent": "${secret}"
         }
       }
+    },
+	{
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "${ci_role_arn}"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::${bucket}/*"
     }
   ]
 }

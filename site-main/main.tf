@@ -34,6 +34,7 @@ data "template_file" "bucket_policy" {
   vars = {
     bucket = var.bucket_name
     secret = var.duplicate-content-penalty-secret
+	ci_role_arn = var.ci_role_arn
   }
 }
 
