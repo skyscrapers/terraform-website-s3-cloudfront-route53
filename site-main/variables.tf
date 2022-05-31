@@ -6,6 +6,11 @@ variable "domain" {
   type = string
 }
 
+variable "aliases" {
+  type    = list(string)
+  default = []
+}
+
 variable "bucket_name" {
   type        = string
   description = "The name of the S3 bucket to create."

@@ -155,6 +155,6 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     minimum_protocol_version = var.minimum_client_tls_protocol_version
   }
 
-  aliases = [var.domain]
+  aliases = var.domain
   tags    = local.tags
 }
