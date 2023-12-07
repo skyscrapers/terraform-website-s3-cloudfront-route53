@@ -53,3 +53,26 @@ variable "minimum_client_tls_protocol_version" {
   description = "CloudFront viewer certificate minimum protocol version"
   default     = "TLSv1"
 }
+
+variable "aliases" {
+  type    = list(string)
+  description = "A list of alternate cnames"
+  default = []
+}
+
+# s3 public access block settings
+variable  "block_public_acls" {
+  type = bool
+}  
+
+variable  "block_public_policy" {
+  type = bool
+}   
+
+variable  "ignore_public_acls" {
+  type = bool
+}   
+
+variable  "restrict_public_buckets" {
+  type = bool
+}   
