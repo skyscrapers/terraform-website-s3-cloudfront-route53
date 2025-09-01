@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> DEPRECATION NOTICE. This repository is no longer maintained.
+
+
 # Terraform setup for S3 static site with CloudFront, Certificate Manager and Route53
 
 This Git repository contains the required [Terraform](https://www.terraform.io/)
